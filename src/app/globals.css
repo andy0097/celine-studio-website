@@ -1,26 +1,349 @@
 @import "tailwindcss";
 
+/*
+ * Celine Studio design tokens.
+ * Source of truth: Resources/design-system-foundations.md
+ * Rule: use the token, never the raw value. If a value is missing, add a token
+ * to the doc first, then here.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Fonts
+ * Rizoma (display) is self-hosted: put the licensed files in public/fonts/rizoma/.
+ * Instrument Sans (text/UI) is loaded by next/font in src/app/layout.tsx.
+ * ------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Rizoma";
+  src:
+    url("/fonts/rizoma/Rizoma-Light.woff2") format("woff2"),
+    url("/fonts/rizoma/Rizoma-Light.woff") format("woff"),
+    /* Trial file, until the licensed woff2/woff are added (see design doc). */
+    url("/fonts/rizoma/RizomaTestL-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
+ * Theme: these generate Tailwind utilities (bg-surface, text-ink, p-space-md…)
+ * ------------------------------------------------------------------------- */
+@theme {
+  /* Drop Tailwind's default palette so only Celine colors exist. */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Colors */
+  --color-surface: #f5efe9;
+  --color-surface-alt: #d7d0ca;
+  --color-ink: #191618;
+  --color-ink-muted: #191618b3; /* 70% */
+  --color-ink-subtle: #19161880; /* 50% */
+  --color-on-dark: #d7d0ca;
+  --color-on-dark-muted: #d7d0ca6b; /* 42% */
+  --color-line: #0000007a; /* 48% */
+  --color-line-on-dark: rgb(219 215 214 / 48%);
+  --color-line-on-photo: #ffffff;
+  --color-line-on-photo-frame: #ffffffcc; /* 80% */
+
+  /* Font families */
+  --font-display: "Rizoma", var(--font-instrument-sans), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Spacing scale. Prefixed with "space-" so classes read like the token
+     name (gap-space-md) and don't collide with Tailwind's sm/md/lg sizes. */
+  --spacing-space-2xs: 4px;
+  --spacing-space-xs: 8px;
+  --spacing-space-sm: 12px;
+  --spacing-space-md: 16px;
+  --spacing-space-lg: 24px;
+  --spacing-space-xl: 32px;
+  --spacing-space-2xl: 48px;
+  --spacing-space-3xl: 64px;
+  --spacing-space-4xl: 96px;
+  --spacing-space-5xl: 112px;
+
+  /* Radius: radius-none (0) everywhere, radius-full for avatars only. */
+  --radius-none: 0;
+  --radius-full: 9999px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Non-utility tokens (layout, lines, motion). Use as var(--…) or in arbitrary
+ * values, e.g. px-[var(--content-inset)].
+ * ------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Grid: content is 12 columns, max 1240px wide, centred. The page guides
+     sit 24px outside the content edges, so they follow the content on wide
+     screens. Full-bleed elements (photos, overlays, section borders) ignore
+     this and span the viewport. */
+  --content-max: 1240px;
+  --grid-columns: 12;
+  --grid-gutter: 16px;
+  --page-margin: 44px; /* min edge-to-content; mobile guide lands 20px in */
+  --guide-to-content: 24px;
+  /* Distance from the edge of a full-width box to the content / the guide.
+     The 100% resolves against the containing block, so only use these on
+     elements positioned inside a full-width section. For normal-flow
+     content use the `container-page` utility instead. */
+  --content-inset: max(var(--page-margin), calc((100% - var(--content-max)) / 2));
+  --page-guide: calc(var(--content-inset) - var(--guide-to-content));
+  --section-border-offset: 16px; /* top dotted line, 16px below section top */
+  /* Extra space added between sections (SectionGap), on top of each
+     section's own padding: roughly doubles the gap between them. */
+  --section-gap: 112px; /* space-5xl */
+
+  /* Hero: one content box, 70vh tall and centred vertically. On desktop it is
+     three 4-column sections: headline (1–4), image (5–8), subtext (9–12). */
+  --hero-content-h: 70svh;
+
+  /* Lines */
+  --stroke-hairline: 1px;
+  --stroke-icon: 1.2px;
+  --line-dash: 4px;
+  --line-gap: 4px;
+  --line-clearance: 12px; /* min distance from any dotted line */
+
+  /* Image frames (crop marks) */
+  --frame-overshoot-top: 56px;
+  --frame-overshoot-bottom: 12px;
+  --frame-overshoot-inner: 56px;
+  --frame-overshoot-outer: 30px; /* outer side of an edge image: stops at the content edge */
+  --caption-gap: 10px; /* image → its caption */
+  --card-caption-gap: 14px; /* project card image → its caption + arrow */
+  --dimension-line-offset: 28px;
+  --dimension-tick: 10px;
+  --inset-frame-padding: 10px; /* dashed border around a detail image */
+
+  /* Overlay */
+  --overlay-photo: linear-gradient(90deg, #19161862 0%, #1916184d 55%, #19161861 100%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 1024px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* At 1440 this gives exactly 1240px of content, guides 76px in. */
+    --page-margin: 100px;
+    --grid-gutter: 24px;
+    --section-gap: 224px; /* 2 × space-5xl */
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---------------------------------------------------------------------------
+ * Layout utilities
+ * container-page: centred 1240px content box, with the page margin as padding.
+ * grid-12: the 12-column grid; place children with col-span-* / col-start-*.
+ * Anything full screen simply doesn't go inside container-page.
+ * ------------------------------------------------------------------------- */
+@utility container-page {
+  width: 100%;
+  max-width: calc(var(--content-max) + 2 * var(--page-margin));
+  margin-inline: auto;
+  padding-inline: var(--page-margin);
+}
+
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+}
+
+/* ---------------------------------------------------------------------------
+ * Type tokens: one class per token, e.g. <h1 class="type-display uppercase">
+ * Display sizes are fluid; the clamp() ranges are provisional until the
+ * mobile designs are done.
+ * ------------------------------------------------------------------------- */
+@utility type-wordmark {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(160px, 34.72vw, 500px);
+  line-height: 0.8; /* 400 / 500 */
+  letter-spacing: -0.04em;
+}
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(64px, 11.4vw, 164px);
+  line-height: 0.9146; /* 150 / 164 */
+  letter-spacing: -0.03em;
+}
+
+/* One-line headings: 164 / 112 */
+@utility type-display-tight {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(64px, 11.4vw, 164px);
+  line-height: 0.683;
+  letter-spacing: -0.03em;
+}
+
+/* Settled on the project-list values (24 / 28, 0.12em) for the hero too. */
+@utility type-lead {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@utility type-body {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@utility type-link {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@utility type-link-list {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@utility type-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@utility type-label-caption {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@utility type-fig {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 18px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@utility bg-overlay-photo {
+  background-image: var(--overlay-photo);
+}
+
+/* Dotted lines (4 / 4, 1px). Drawn as backgrounds so they can scale on. */
+/* Override the colour with [--guide-color:var(--color-line-on-dark)] etc. */
+@utility guide-v {
+  width: var(--stroke-hairline);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--guide-color, var(--color-line)) 0 var(--line-dash),
+    transparent var(--line-dash) calc(var(--line-dash) + var(--line-gap))
+  );
+}
+
+@utility guide-h {
+  height: var(--stroke-hairline);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--guide-color, var(--color-line)) 0 var(--line-dash),
+    transparent var(--line-dash) calc(var(--line-dash) + var(--line-gap))
+  );
+}
+
+/* Hero content box: 70vh tall, centred in the (full-height) hero section. */
+@utility hero-content {
+  top: calc((100% - var(--hero-content-h)) / 2);
+  height: var(--hero-content-h);
+}
+
+/* Hero image: positioned over the grid's columns 5–8 (centred), full height
+   of the content box. Kept out of the grid flow so it can grow to full
+   screen. The scroll animation only tweens --grow-y (to full height) and
+   --grow-x (to full width) from 0 to 1; the size itself always comes from
+   here, so CSS changes apply live. Must sit directly in the full-width hero
+   section (the % values resolve against it).
+   Mobile (provisional): columns 3–10, leaving room for the subtext below. */
+@utility hero-image {
+  --rest-h: calc(var(--hero-content-h) - var(--spacing-space-5xl));
+  --rest-w: calc(
+    (100% - 2 * var(--content-inset) - 11 * var(--grid-gutter)) * 8 / 12 + 7 * var(--grid-gutter)
+  );
+  top: calc((100% - var(--hero-content-h)) / 2 * (1 - var(--grow-y, 0)));
+  height: calc(var(--rest-h) + (100% - var(--rest-h)) * var(--grow-y, 0));
+  width: calc(var(--rest-w) + (100% - var(--rest-w)) * var(--grow-x, 0));
+
+  @media (min-width: 1024px) {
+    --rest-h: var(--hero-content-h);
+    --rest-w: calc(
+      (100% - 2 * var(--content-inset) - 11 * var(--grid-gutter)) * 4 / 12 + 3 * var(--grid-gutter)
+    );
+  }
+}
+
+/* Process collage stage: a full-screen box whose visible part is a band,
+   clipped to the middle. Driven by three 0→1 values (all default to the
+   designed resting state, so it renders correctly without JS):
+   --appear-x  the stripe wipes in from the left
+   --appear-y  the stripe opens to the band height (640px)
+   --grow      the band opens to the full screen
+   --band-inset is the clipped-off height above / below the visible part;
+   the band's dotted lines sit on those edges. */
+@utility process-stage {
+  --band: min(640px, 70svh);
+  --stripe: 56px;
+  --visible: calc(
+    var(--stripe) + (var(--band) - var(--stripe)) * var(--appear-y, 1) +
+      (100% - var(--band)) * var(--grow, 0)
+  );
+  --band-inset: calc((100% - var(--visible)) / 2);
+  height: 100svh;
+  /* Lay out as if only the band were there: the box overhangs it equally. */
+  margin-block: calc((var(--band) - 100svh) / 2);
+}
+
+/* ---------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------- */
+@layer base {
+  html {
+    background-color: var(--color-surface);
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 500;
+  }
+
+  /* Intro: elements start hidden until the hero timeline reveals them. */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-intro] {
+      visibility: hidden;
+    }
+  }
+
+  /* Revealed by a scroll timeline (always starts hidden). */
+  [data-scroll-reveal] {
+    visibility: hidden;
+  }
+
+  html.is-intro {
+    overflow: hidden;
+  }
 }
