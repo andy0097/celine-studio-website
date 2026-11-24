@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { startTransition, useActionState, useState, type FormEvent, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight } from "@/components/ui/icons";
-
-const PROJECT_TYPES = ["Residential", "HORECA", "On-site visit"];
+import { PROJECT_TYPES, type ProjectType } from "@/lib/leads/lead";
+import { submitLead, type LeadState } from "@/app/[locale]/(site)/book-a-consultation/actions";
 
 function Field({ label, id, children }: { label: string; id: string; children: ReactNode }) {
   return (
@@ -19,83 +21,105 @@ function Field({ label, id, children }: { label: string; id: string; children: R
 const input =
   "type-link-list w-full bg-transparent font-normal outline-none placeholder:text-ink-subtle";
 
+const INITIAL: LeadState = { status: "idle" };
+
 /**
  * Consultation request (Paper "Book a Consultation — B Split", form half).
- * Underlined fields, project type as single-choice chips.
- * TODO: send to the studio's inbox / CRM; for now it only confirms locally.
+ * Underlined fields, project type as single-choice chips. Sends to the
+ * submitLead server action (saved in Supabase, emailed to the studio).
+ * `email` is the studio's address, offered when sending fails.
  */
-export default function ConsultationForm() {
-  const [type, setType] = useState(PROJECT_TYPES[0]);
-  const [sent, setSent] = useState(false);
+export default function ConsultationForm({ email }: { email: string }) {
+  const t = useTranslations("Form");
+  const pathname = usePathname();
+  const [type, setType] = useState<ProjectType>(PROJECT_TYPES[0]);
+  const [state, action, pending] = useActionState(submitLead, INITIAL);
 
+  // Submitted by hand rather than <form action>, which would clear the fields when sending fails
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    const data = new FormData(e.currentTarget);
+    startTransition(() => action(data));
   };
 
-  if (sent) {
+  if (state.status === "sent") {
     return (
       <div role="status" className="flex max-w-[524px] flex-col gap-space-lg border-t border-dashed border-ink/50 pt-space-xl">
-        <p className="type-lead">Thank you.</p>
-        <p className="type-body">We’ll call you within one working day to talk about your {type === "On-site visit" ? "site visit" : "project"}.</p>
+        <p className="type-lead">{t("thanks")}</p>
+        <p className="type-body">{t("thanksText", { kind: type })}</p>
       </div>
     );
   }
 
   return (
     <form onSubmit={onSubmit} data-stagger className="flex max-w-[524px] flex-col gap-space-xl">
-      <Field label="Name" id="book-name">
-        <input id="book-name" name="name" required autoComplete="name" placeholder="Your full name" className={input} />
+      <input type="hidden" name="sourcePage" value={pathname} />
+      {/* Spam trap: hidden from people, bots fill it in */}
+      <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label htmlFor="book-company">Company</label>
+        <input id="book-company" name="company" tabIndex={-1} autoComplete="off" />
+      </div>
+
+      <Field label={t("name")} id="book-name">
+        <input id="book-name" name="name" required autoComplete="name" placeholder={t("namePlaceholder")} className={input} />
       </Field>
 
       <div className="grid grid-cols-1 gap-space-xl sm:grid-cols-2 sm:gap-space-lg">
-        <Field label="Email" id="book-email">
-          <input id="book-email" name="email" type="email" required autoComplete="email" placeholder="name@email.com" className={input} />
+        <Field label={t("email")} id="book-email">
+          <input id="book-email" name="email" type="email" required autoComplete="email" placeholder={t("emailPlaceholder")} className={input} />
         </Field>
-        <Field label="Phone" id="book-phone">
+        <Field label={t("phone")} id="book-phone">
           <input id="book-phone" name="phone" type="tel" autoComplete="tel" placeholder="+40" className={input} />
         </Field>
       </div>
 
       <fieldset className="flex flex-col gap-space-sm">
-        <legend className="type-label pb-space-sm text-ink-muted">Project type</legend>
+        <legend className="type-label pb-space-sm text-ink-muted">{t("projectType")}</legend>
         <div className="flex flex-wrap gap-space-xs">
-          {PROJECT_TYPES.map((t) => {
-            const on = t === type;
+          {PROJECT_TYPES.map((value) => {
+            const on = value === type;
             return (
               <label
-                key={t}
+                key={value}
                 className={`type-label cursor-pointer border border-ink px-space-md py-[10px] transition-colors duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-offset-2 ${
                   on ? "bg-ink text-surface" : "hover:bg-ink/5"
                 }`}
               >
-                <input type="radio" name="type" value={t} checked={on} onChange={() => setType(t)} className="sr-only" />
-                {t}
+                <input type="radio" name="type" value={value} checked={on} onChange={() => setType(value)} className="sr-only" />
+                {t(`types.${value}`)}
               </label>
             );
           })}
         </div>
       </fieldset>
 
-      <Field label="City" id="book-city">
-        <input id="book-city" name="city" autoComplete="address-level2" placeholder="Oradea" className={input} />
+      <Field label={t("city")} id="book-city">
+        <input id="book-city" name="city" autoComplete="address-level2" placeholder={t("cityPlaceholder")} className={input} />
       </Field>
 
-      <Field label="About the project" id="book-about">
+      <Field label={t("about")} id="book-about">
         <textarea
           id="book-about"
           name="about"
           rows={3}
-          placeholder="Size, rooms, timeline, budget range…"
+          placeholder={t("aboutPlaceholder")}
           className={`${input} resize-none`}
         />
       </Field>
 
+      {(state.status === "error" || state.status === "invalid") && (
+        <p role="alert" className="type-body text-ink">
+          {t("error", { email })}
+        </p>
+      )}
+
       <button
         type="submit"
-        className="type-link group flex w-full items-center justify-between bg-ink px-[22px] py-space-md text-surface"
+        disabled={pending}
+        aria-busy={pending}
+        className="type-link group flex w-full items-center justify-between bg-ink px-[22px] py-space-md text-surface disabled:opacity-60"
       >
-        Send request
+        {pending ? t("sending") : t("submit")}
         <span className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
           <ArrowUpRight />
         </span>

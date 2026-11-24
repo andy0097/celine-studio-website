@@ -1,6 +1,6 @@
 import type { ComponentMeta } from "@/design-system/types";
 
-const ALL_INNER = ["/residential", "/horeca", "/projects/apartment-oradea", "/projects/street-coffee", "/process", "/studio", "/on-site-consultancy"];
+const ALL_INNER = ["/residential", "/horeca", "/projects/[slug]", "/process", "/studio", "/on-site-consultancy"];
 
 /** Inventory: page bands and larger blocks in components/sections (+ book, privacy). */
 export const SECTION_COMPONENTS: ComponentMeta[] = [
@@ -86,7 +86,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
       en: { items: [{ title: "Briefing & space analysis", text: "Measurements, guest and staff routes, capacity and budget — agreed before any sketch." }] },
       ro: { items: [{ title: "Briefing și analiza spațiului", text: "Măsurători, fluxuri pentru clienți și personal, capacitate și buget — stabilite înainte de orice schiță." }] },
     },
-    pages: ["/horeca", "/projects/street-coffee", "/process", "/on-site-consultancy"],
+    pages: ["/horeca", "/projects/[slug]", "/process", "/on-site-consultancy"],
     sanity: "settings.services",
   },
   {
@@ -105,7 +105,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
       en: { cells: [{ value: "+XX%", label: "Peak-hour serving capacity" }] },
       ro: { cells: [{ value: "+XX%", label: "Capacitate de servire la ore de vârf" }] },
     },
-    pages: ["/projects/street-coffee"],
+    pages: ["/projects/[slug]"],
     sanity: "caseStudy.value / caseStudy.results",
   },
   {
@@ -121,7 +121,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
       en: { specs: [{ label: "Type", value: "Residential" }, { label: "Location", value: "Oradea, Bihor" }] },
       ro: { specs: [{ label: "Tip", value: "Rezidențial" }, { label: "Locație", value: "Oradea, Bihor" }] },
     },
-    pages: ["/projects/apartment-oradea", "/projects/street-coffee"],
+    pages: ["/projects/[slug]"],
     sanity: "caseStudy.specs",
   },
   {
@@ -137,7 +137,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
       en: { items: ["The kitchen opens to the living area, with an island that both separates and stores."] },
       ro: { items: ["Bucătăria se deschide spre living, cu o insulă care separă și depozitează în același timp."] },
     },
-    pages: ["/residential", "/projects/apartment-oradea"],
+    pages: ["/residential", "/projects/[slug]"],
   },
   {
     name: "SplitHeading",
@@ -156,7 +156,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
       en: { eyebrow: "01 — Value for the business", title: "What design does for your business", text: "A venue isn’t judged only by how it looks." },
       ro: { eyebrow: "01 — Valoare pentru afacere", title: "Ce face designul pentru afacerea ta", text: "Un local nu e judecat doar după cum arată." },
     },
-    pages: ["/projects/street-coffee", "/process"],
+    pages: ["/projects/[slug]", "/process"],
   },
   {
     name: "QuoteCentred",
@@ -197,7 +197,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
       en: { eyebrow: "What an owner says", quote: "Our guests notice the light first." },
       ro: { eyebrow: "Ce spune un proprietar", quote: "Oaspeții noștri observă mai întâi lumina." },
     },
-    pages: ["/horeca", "/projects/street-coffee"],
+    pages: ["/horeca", "/projects/[slug]"],
     sanity: "testimonial reference",
   },
   {
@@ -213,7 +213,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
     },
     design: { labelStyle: { type: "typeStyle", label: "Name style", value: "type-quote" } },
     samples: { en: { label: "Street Coffee" }, ro: { label: "Street Coffee" } },
-    pages: ["/projects/apartment-oradea", "/projects/street-coffee"],
+    pages: ["/projects/[slug]"],
     sanity: "caseStudy.next (reference)",
   },
   {

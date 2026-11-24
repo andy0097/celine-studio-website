@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
+import { useTranslations } from "next-intl";
 import Attribution from "@/components/ui/Attribution";
 import { ArrowLeft, ArrowRight } from "@/components/ui/icons";
 
@@ -22,6 +23,7 @@ export default function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
   const [index, setIndex] = useState(0);
   const [shown, setShown] = useState(0);
   const busy = useRef(false);
+  const t = useTranslations("Book");
 
   function go(dir: 1 | -1, contextSafe: <T extends (...args: never[]) => unknown>(fn: T) => T) {
     if (busy.current) return;
@@ -82,15 +84,15 @@ export default function TestimonialSlider({ quotes }: { quotes: Quote[] }) {
   return (
     <div ref={root} className="flex flex-col gap-space-2xl">
       <div className="flex items-center justify-between gap-space-lg">
-        <p data-fade className="type-label">Kind words from our clients</p>
+        <p data-fade className="type-label">{t("testimonials")}</p>
         <div className="flex items-center gap-space-lg">
           <span className="type-label whitespace-nowrap tabular-nums" aria-hidden>
             {String(index + 1).padStart(2, "0")} / {String(quotes.length).padStart(2, "0")}
           </span>
-          <button type="button" onClick={() => goRef.current(-1)} aria-label="Previous testimonial" className="-m-space-xs p-space-xs transition-transform hover:-translate-x-0.5">
+          <button type="button" onClick={() => goRef.current(-1)} aria-label={t("previous")} className="-m-space-xs p-space-xs transition-transform hover:-translate-x-0.5">
             <ArrowLeft />
           </button>
-          <button type="button" onClick={() => goRef.current(1)} aria-label="Next testimonial" className="-m-space-xs p-space-xs transition-transform hover:translate-x-0.5">
+          <button type="button" onClick={() => goRef.current(1)} aria-label={t("next")} className="-m-space-xs p-space-xs transition-transform hover:translate-x-0.5">
             <ArrowRight />
           </button>
         </div>

@@ -1,6 +1,6 @@
 import { ButtonLink } from "@/components/ui/links";
 import { Fig } from "@/components/ui/labels";
-import { ROUTES } from "@/content/site";
+import { ROUTES } from "@/i18n/links";
 
 /* The drawing, in the design's 1440 × 760 frame. It stretches with the
    section (preserveAspectRatio="none"); strokes stay 1px and keep the 4 / 4

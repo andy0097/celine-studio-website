@@ -4,8 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { CONTACT, EXPLORE_LINKS, FOOTER_PROJECTS, LEGAL_LINKS } from "@/content/footer";
-import { ROUTES } from "@/content/site";
+import { NAV as EXPLORE_LINKS, ROUTES, type Href } from "@/i18n/links";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
@@ -45,9 +44,22 @@ function Heading({ children, id, htmlFor }: { children: string; id?: string; htm
  * 3. Copyright, tagline, legal links
  * Below 1024px the columns become a 2-up / stacked grid.
  */
-export default function Footer() {
+export type FooterContent = {
+  contact: { email: string; phone: string | null; address: string | null };
+  /** Featured projects; RES / HORECA tag. Those without a page point at their category. */
+  projects: { key: string; title: string; tag: "res" | "horeca"; href: Href }[];
+  newsletterTitle: string;
+  newsletterText: string;
+  tagline: string;
+  legal: ({ label: string; href: Href } | { label: string; external: string })[];
+};
+
+export default function Footer({ content }: { content: FooterContent }) {
   const root = useRef<HTMLElement>(null);
   const t = useTranslations("Nav");
+  const f = useTranslations("Footer");
+  const c = useTranslations("Common");
+  const CONTACT = content.contact;
 
   useGSAP(
     () => {
@@ -89,23 +101,25 @@ export default function Footer() {
               <a href={`mailto:${CONTACT.email}`} className="type-link-list">
                 {CONTACT.email}
               </a>
-              <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="type-link-list">
-                {CONTACT.phone}
-              </a>
-              <span className="type-link-list font-normal text-ink-muted">{CONTACT.address}</span>
+              {CONTACT.phone && (
+                <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="type-link-list">
+                  {CONTACT.phone}
+                </a>
+              )}
+              {CONTACT.address && <span className="type-link-list font-normal text-ink-muted">{CONTACT.address}</span>}
             </address>
             <Link
               href={ROUTES.book}
               className="type-link flex items-center gap-[14px] bg-ink px-[22px] py-space-md text-surface"
             >
-              Book a consultation
+              {c("bookConsultation")}
               <ArrowUpRight />
             </Link>
           </div>
 
           {/* Explore */}
           <nav aria-labelledby="footer-explore" className="flex flex-col gap-space-lg lg:w-[160px] lg:shrink-0 lg:pt-[6px]">
-            <Heading id="footer-explore">Explore</Heading>
+            <Heading id="footer-explore">{f("explore")}</Heading>
             <ul className="flex flex-col gap-space-sm">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.key}>
@@ -119,13 +133,13 @@ export default function Footer() {
 
           {/* Projects */}
           <div className="flex flex-col gap-space-lg lg:w-[232px] lg:shrink-0 lg:pt-[6px]">
-            <Heading>Projects</Heading>
+            <Heading>{f("projects")}</Heading>
             <ul className="flex flex-col gap-space-sm">
-              {FOOTER_PROJECTS.map((project) => (
-                <li key={project.title}>
+              {content.projects.map((project) => (
+                <li key={project.key}>
                   <Link href={project.href} className="flex items-baseline justify-between gap-space-sm">
                     <span className="type-link-list">{project.title}</span>
-                    <span className="type-label text-ink-muted">{project.tag}</span>
+                    <span className="type-label text-ink-muted">{f(project.tag === "res" ? "tagRes" : "tagHoreca")}</span>
                   </Link>
                 </li>
               ))}
@@ -140,7 +154,7 @@ export default function Footer() {
               e.preventDefault();
             }}
           >
-            <Heading htmlFor="footer-newsletter-email">Join our newsletter</Heading>
+            <Heading htmlFor="footer-newsletter-email">{content.newsletterTitle}</Heading>
             <div className="flex items-center gap-space-sm border-b border-ink pb-[10px]">
               <input
                 id="footer-newsletter-email"
@@ -148,14 +162,14 @@ export default function Footer() {
                 name="email"
                 required
                 autoComplete="email"
-                placeholder="Your email"
+                placeholder={f("emailPlaceholder")}
                 className="type-link-list min-w-0 flex-1 bg-transparent font-normal outline-none placeholder:text-ink-subtle"
               />
-              <button type="submit" aria-label="Subscribe" className="-m-space-xs p-space-xs">
+              <button type="submit" aria-label={f("subscribe")} className="-m-space-xs p-space-xs">
                 <ArrowRight />
               </button>
             </div>
-            <p className="type-label text-ink-muted">New projects and studio notes, a few times a year.</p>
+            <p className="type-label text-ink-muted">{content.newsletterText}</p>
           </form>
         </div>
       </div>
@@ -178,10 +192,10 @@ export default function Footer() {
       <div className="relative">
         <span aria-hidden className="guide-h absolute inset-x-0 top-0" />
         <div className="container-page type-label flex flex-col gap-space-md pt-[22px] pb-space-2xl lg:flex-row lg:items-center lg:justify-between">
-          <p>© 2026 Celine Studio Art</p>
-          <p>Residential &amp; HORECA interiors — Oradea, Romania</p>
+          <p>{f("copyright", { year: 2026 })}</p>
+          <p>{content.tagline}</p>
           <ul className="flex gap-space-xl">
-            {LEGAL_LINKS.map((link) => (
+            {content.legal.map((link) => (
               <li key={link.label}>
                 {"external" in link ? (
                   <a href={link.external} target="_blank" rel="noreferrer">

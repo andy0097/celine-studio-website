@@ -11,5 +11,80 @@
     "switchTo": "Română",
     "switchToShort": "RO",
     "label": "Change language to Romanian"
+  },
+  "Common": {
+    "bookConsultation": "Book a consultation",
+    "view": "View",
+    "caseStudySoon": "Case study soon",
+    "nextProject": "Next project",
+    "clientTestimonial": "Client testimonial",
+    "faq": "FAQ",
+    "residential": "Residential",
+    "horeca": "HORECA",
+    "projects": "Projects"
+  },
+  "Home": {
+    "referenceProjects": "Reference projects",
+    "projectsByCategory": "Projects by category",
+    "seeAll": "See all {category} projects",
+    "sketchSoon": "Sketch — coming soon"
+  },
+  "CaseStudy": {
+    "breadcrumb": "Projects / {category} / {number}",
+    "gallery": "Gallery",
+    "galleryNumbered": "{number} — Gallery",
+    "hoverSketch": "Hover a photo to see the sketch",
+    "heroImage": "Project photo"
+  },
+  "Process": {
+    "stages": "The stages",
+    "stage": "Stage {number}: ",
+    "youReceive": "You receive"
+  },
+  "OnSite": {
+    "duration": "Duration",
+    "fee": "Fee"
+  },
+  "Book": {
+    "call": "Call",
+    "write": "Write",
+    "testimonials": "Kind words from our clients",
+    "previous": "Previous testimonial",
+    "next": "Next testimonial"
+  },
+  "Form": {
+    "name": "Name",
+    "namePlaceholder": "Your full name",
+    "email": "Email",
+    "emailPlaceholder": "name@email.com",
+    "phone": "Phone",
+    "projectType": "Project type",
+    "types": {
+      "residential": "Residential",
+      "horeca": "HORECA",
+      "onSite": "On-site visit"
+    },
+    "city": "City",
+    "cityPlaceholder": "Oradea",
+    "about": "About the project",
+    "aboutPlaceholder": "Size, rooms, timeline, budget range…",
+    "submit": "Send request",
+    "sending": "Sending…",
+    "thanks": "Thank you.",
+    "thanksText": "We’ll call you within one working day to talk about your {kind, select, onSite {site visit} other {project}}.",
+    "error": "Something went wrong. Please try again, or write to us at {email}."
+  },
+  "Footer": {
+    "explore": "Explore",
+    "projects": "Projects",
+    "emailPlaceholder": "Your email",
+    "subscribe": "Subscribe",
+    "copyright": "© {year} Celine Studio Art",
+    "tagRes": "RES",
+    "tagHoreca": "HORECA"
+  },
+  "Privacy": {
+    "updated": "Last updated — {date}",
+    "contents": "Contents"
   }
 }

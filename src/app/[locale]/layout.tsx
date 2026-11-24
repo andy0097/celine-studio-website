@@ -4,6 +4,10 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { Suspense } from "react";
+import { draftMode } from "next/headers";
+import { SanityLive } from "@/sanity/lib/live";
+import { PreviewTools } from "@/components/sanity/PreviewTools";
 import "../globals.css";
 
 // Text / UI face. Rizoma (display) is self-hosted via @font-face in globals.css.
@@ -37,7 +41,21 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     <html lang={locale} className={`${instrumentSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        {/* Refreshes pages when content is published; in preview, also drafts + click-to-edit. */}
+        <Suspense>
+          <Live />
+        </Suspense>
       </body>
     </html>
+  );
+}
+
+async function Live() {
+  const { isEnabled } = await draftMode();
+  return (
+    <>
+      <SanityLive includeDrafts={isEnabled} />
+      <PreviewTools />
+    </>
   );
 }

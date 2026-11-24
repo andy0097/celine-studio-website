@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 .DS_Store
+
+# Generated seed import (npm run seed:build)
+/seed/
+!.env.example

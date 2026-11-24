@@ -1,5 +1,3 @@
-import { SERVICES } from "@/content/services";
-
 /** Column rules and padding: a dashed rule left of every cell but the first in its row. */
 function cellClass(i: number) {
   const sm = i % 2 === 0 ? "sm:border-l-0 sm:pl-0 sm:pr-space-xl" : "sm:border-l sm:px-space-xl";
@@ -14,7 +12,7 @@ function cellClass(i: number) {
  * dashed dividers — the top one at 50%, the rest at 20% — with dashed
  * column rules.
  */
-export default function ServicesGrid({ items = SERVICES }: { items?: { title: string; text: string }[] }) {
+export default function ServicesGrid({ items }: { items: { title: string; text: string | null }[] }) {
   return (
     <ol data-stagger className="grid grid-cols-1 border-t border-dashed border-ink/50 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((s, i) => (

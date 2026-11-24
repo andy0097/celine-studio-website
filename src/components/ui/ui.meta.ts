@@ -97,7 +97,7 @@ export const UI_COMPONENTS: ComponentMeta[] = [
       typeStyle: { type: "typeStyle", label: "Text style", value: "type-label" },
     },
     samples: { en: { label: "Projects / Residential" }, ro: { label: "Proiecte / Rezidențial" } },
-    pages: ["/residential", "/horeca", "/projects/apartment-oradea", "/projects/street-coffee", "/process", "/studio", "/book-a-consultation", "/on-site-consultancy"],
+    pages: ["/residential", "/horeca", "/projects/[slug]", "/process", "/studio", "/book-a-consultation", "/on-site-consultancy"],
   },
   {
     name: "DimensionLine",
@@ -151,7 +151,7 @@ export const UI_COMPONENTS: ComponentMeta[] = [
       en: { image: { src: "/images/projects/residential/bathroom.png", sketch: "/images/projects/residential/bathroom_sketch.png", alt: "Bathroom with a round backlit mirror" } },
       ro: { image: { src: "/images/projects/residential/bathroom.png", sketch: "/images/projects/residential/bathroom_sketch.png", alt: "Baie cu oglindă rotundă iluminată" } },
     },
-    pages: ["/projects/apartment-oradea", "/studio", "/horeca (via VenueCard)"],
+    pages: ["/projects/[slug]", "/studio", "/horeca (via VenueCard)"],
     motion: "Sketch wipes in bottom to top on hover/focus (CSS clip-path).",
     notes: "Fills its parent; the parent sets the ratio. The sketch must have the same framing as the photo.",
   },
@@ -176,7 +176,7 @@ export const UI_COMPONENTS: ComponentMeta[] = [
       en: { initials: "IP", name: "Ioana & Radu Pavel", project: "Family house, Cluj" },
       ro: { initials: "IP", name: "Ioana & Radu Pavel", project: "Casă de familie, Cluj" },
     },
-    pages: ["/residential", "/horeca", "/projects/street-coffee", "/book-a-consultation"],
+    pages: ["/residential", "/horeca", "/projects/[slug]", "/book-a-consultation"],
   },
   {
     name: "Faq",

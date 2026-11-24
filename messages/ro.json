@@ -11,5 +11,80 @@
     "switchTo": "English",
     "switchToShort": "EN",
     "label": "Schimbă limba în engleză"
+  },
+  "Common": {
+    "bookConsultation": "Programează o consultanță",
+    "view": "Vezi",
+    "caseStudySoon": "Studiu de caz în curând",
+    "nextProject": "Proiectul următor",
+    "clientTestimonial": "Testimonial client",
+    "faq": "Întrebări frecvente",
+    "residential": "Rezidențial",
+    "horeca": "HORECA",
+    "projects": "Proiecte"
+  },
+  "Home": {
+    "referenceProjects": "Proiecte de referință",
+    "projectsByCategory": "Proiecte pe categorii",
+    "seeAll": "Vezi toate proiectele {category}",
+    "sketchSoon": "Schiță — în curând"
+  },
+  "CaseStudy": {
+    "breadcrumb": "Proiecte / {category} / {number}",
+    "gallery": "Galerie",
+    "galleryNumbered": "{number} — Galerie",
+    "hoverSketch": "Treci cu mouse-ul peste o fotografie ca să vezi schița",
+    "heroImage": "Fotografie din proiect"
+  },
+  "Process": {
+    "stages": "Etapele",
+    "stage": "Etapa {number}: ",
+    "youReceive": "Primești"
+  },
+  "OnSite": {
+    "duration": "Durată",
+    "fee": "Onorariu"
+  },
+  "Book": {
+    "call": "Sună",
+    "write": "Scrie",
+    "testimonials": "Cuvinte frumoase de la clienții noștri",
+    "previous": "Testimonialul anterior",
+    "next": "Testimonialul următor"
+  },
+  "Form": {
+    "name": "Nume",
+    "namePlaceholder": "Numele tău complet",
+    "email": "E-mail",
+    "emailPlaceholder": "nume@email.com",
+    "phone": "Telefon",
+    "projectType": "Tipul proiectului",
+    "types": {
+      "residential": "Rezidențial",
+      "horeca": "HORECA",
+      "onSite": "Vizită pe șantier"
+    },
+    "city": "Oraș",
+    "cityPlaceholder": "Oradea",
+    "about": "Despre proiect",
+    "aboutPlaceholder": "Suprafață, camere, termen, buget estimativ…",
+    "submit": "Trimite cererea",
+    "sending": "Se trimite…",
+    "thanks": "Mulțumim.",
+    "thanksText": "Te sunăm în cel mult o zi lucrătoare ca să vorbim despre {kind, select, onSite {vizita pe șantier} other {proiectul tău}}.",
+    "error": "Ceva nu a funcționat. Încearcă din nou sau scrie-ne la {email}."
+  },
+  "Footer": {
+    "explore": "Explorează",
+    "projects": "Proiecte",
+    "emailPlaceholder": "Adresa ta de e-mail",
+    "subscribe": "Abonează-te",
+    "copyright": "© {year} Celine Studio Art",
+    "tagRes": "REZ",
+    "tagHoreca": "HORECA"
+  },
+  "Privacy": {
+    "updated": "Ultima actualizare — {date}",
+    "contents": "Cuprins"
   }
 }
