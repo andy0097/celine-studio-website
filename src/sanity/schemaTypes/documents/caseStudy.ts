@@ -139,11 +139,12 @@ export const caseStudy = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "featured",
-      title: "Show on the home page",
+      name: "hasPage",
+      title: "Has its own page",
       type: "boolean",
       group: "overview",
-      initialValue: false,
+      initialValue: true,
+      description: "Off while the case study is still being written: lists show it without a link (“Case study soon”).",
     }),
 
     /* Hero & facts (fixed part of every case study) */

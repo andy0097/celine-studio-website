@@ -41,6 +41,14 @@ export const siteSettings = defineType({
       validation: (rule) => rule.min(2),
     }),
     defineField({
+      name: "servicesIntro",
+      title: "Services heading on case studies",
+      type: "object",
+      group: "services",
+      description: "“Everything included” above the stages on HORECA case studies.",
+      fields: [localized("title", "Title"), localized("text", "Paragraph", { kind: "text" })],
+    }),
+    defineField({
       name: "onSite",
       title: "On-site visit",
       type: "object",
@@ -75,6 +83,7 @@ export const siteSettings = defineType({
           of: [defineArrayMember({ type: "reference", to: [{ type: "caseStudy" }] })],
           validation: (rule) => rule.max(4).unique(),
         }),
+        localized("tagline", "Tagline", { description: "Bottom bar, e.g. “Residential & HORECA interiors — Oradea, Romania”." }),
         localized("newsletterTitle", "Newsletter title"),
         localized("newsletterText", "Newsletter note"),
         defineField({

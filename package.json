@@ -10,7 +10,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typegen": "sanity schema extract --path=src/sanity/extract.json && sanity typegen generate"
+    "typegen": "sanity schema extract --path=src/sanity/extract.json && sanity typegen generate",
+    "seed:build": "sanity exec scripts/seed.ts",
+    "seed:import": "npm run seed:build && sanity dataset import seed/production.ndjson production --missing"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

@@ -52,7 +52,32 @@ export const homePage = page(
     section("hero", "Hero", [
       localized("tagline", "Tagline", { description: "“Residential & HORECA interior design”." }),
       ctaLabel(),
-      refs("projects", "Projects in the hero", "caseStudy", { description: "The stack of project photos; empty = featured case studies." }),
+      defineField({
+        name: "slides",
+        title: "Reference projects",
+        type: "array",
+        description: "Shown over the full-screen hero image. The first photo is the hero render; its sketch is drawn during the intro.",
+        of: [
+          defineArrayMember({
+            name: "heroSlide",
+            type: "object",
+            fields: [
+              localized("title", "Title", { required: true }),
+              localized("location", "Location"),
+              defineField({ name: "image", title: "Photo (full screen)", type: "figure", validation: (rule) => rule.required() }),
+              defineField({
+                name: "panel",
+                title: "Panel image",
+                type: "figure",
+                description: "The framed image beside the list: the sketch when there is one, otherwise a detail crop. Never a filtered photo.",
+              }),
+              defineField({ name: "caseStudy", title: "Case study", type: "reference", to: [{ type: "caseStudy" }] }),
+            ],
+            preview: { select: { title: "title.ro", subtitle: "location.ro", media: "image.photo.image" } },
+          }),
+        ],
+        validation: (rule) => rule.min(1).max(5),
+      }) as FieldDefinition,
     ]),
     section("categories", "Residential / HORECA", [
       refs("residential", "Residential projects", "caseStudy", { max: 3 }),
@@ -97,14 +122,28 @@ export const residentialPage = page("residentialPage", "Residential", [
     titleField(),
     refs("items", "Projects", "caseStudy", { description: "Order on the page; empty = all residential case studies." }),
   ]),
-  section("onSite", "On-site consultancy band", [titleField(), ctaLabel(), image("Background image")]),
+  section("onSite", "On-site consultancy band", [
+    titleField(),
+    localized("text", "Paragraph", { kind: "text" }),
+    ctaLabel(),
+    image("Background image"),
+  ]),
   defineField({ name: "testimonial", type: "reference", to: [{ type: "testimonial" }] }) as FieldDefinition,
 ]);
 
 export const horecaPage = page("horecaPage", "HORECA", [
-  section("hero", "Hero", [eyebrow(), titleField(), intro(), ctaLabel(), image("Portrait image")]),
+  section("hero", "Hero", [
+    eyebrow(),
+    titleField(),
+    intro(),
+    localized("text", "Paragraph", { kind: "text" }),
+    ctaLabel(),
+    image("Portrait image"),
+    localized("imageNote", "Image note", { description: "Right of the caption, e.g. “Street Coffee, Oradea”." }),
+  ]),
   section("venues", "Venues", [
     titleField(false),
+    localized("note", "Note", { description: "“Cafés — Restaurants — Hotels”." }),
     defineField({
       name: "items",
       type: "array",
@@ -154,6 +193,7 @@ export const studioPage = page("studioPage", "Studio", [
   section("hero", "Hero", [eyebrow(), titleField(), intro(), image("Studio portrait"), localized("since", "Since", { description: "“Since 2015”." })]),
   section("philosophy", "Our philosophy", [
     eyebrow(),
+    titleField(false),
     intro(),
     defineField({ name: "principles", type: "array", of: [defineArrayMember({ type: "titledText" })] }) as FieldDefinition,
   ]),
@@ -175,7 +215,7 @@ export const studioPage = page("studioPage", "Studio", [
     }) as FieldDefinition,
     ctaLabel("“See all projects”."),
   ]),
-  section("team", "Team", [titleField(false), refs("members", "Members", "teamMember")]),
+  section("team", "Team", [eyebrow(), titleField(false), refs("members", "Members", "teamMember")]),
 ]);
 
 export const onSitePage = page("onSitePage", "On-site consultancy", [
@@ -190,9 +230,9 @@ export const onSitePage = page("onSitePage", "On-site consultancy", [
 ]);
 
 export const bookPage = page("bookPage", "Book a consultation", [
-  section("hero", "Hero", [titleField(), intro(), image()], "Form labels are interface text (message files), not content."),
-  refs("testimonials", "Testimonials", "testimonial", { description: "The slider beside the form." }) as FieldDefinition,
-  section("faq", "FAQ", [eyebrow(), refs("items", "Questions", "faq")]),
+  section("hero", "Hero", [eyebrow(), titleField(), intro(), image()], "Form labels are interface text (message files), not content."),
+  refs("testimonials", "Testimonials", "testimonial", { description: "The slider under the form." }) as FieldDefinition,
+  section("faq", "FAQ", [eyebrow(), titleField(false), refs("items", "Questions", "faq")]),
 ]);
 
 export const privacyPage = page("privacyPage", "Privacy policy", [
@@ -219,6 +259,7 @@ export const privacyPage = page("privacyPage", "Privacy policy", [
       }),
     ],
   }) as FieldDefinition,
+  localized("note", "Note", { kind: "text", description: "Small print under the last section." }),
 ]);
 
 export const pageTypes = [homePage, residentialPage, horecaPage, processPage, studioPage, onSitePage, bookPage, privacyPage];
