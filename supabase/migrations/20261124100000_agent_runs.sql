@@ -22,3 +22,6 @@ create table public.agent_runs (
 create index agent_runs_created_at_idx on public.agent_runs (created_at desc);
 
 alter table public.agent_runs enable row level security;
+
+-- New Supabase projects don't grant API roles access to tables made in SQL.
+grant select, insert on table public.agent_runs to service_role;
