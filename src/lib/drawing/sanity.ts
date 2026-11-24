@@ -1,0 +1,113 @@
+import "server-only";
+import { createClient, type SanityClient } from "next-sanity";
+import { apiVersion, dataset, projectId } from "@/sanity/env";
+import type { Drawing, SourceImage } from "./providers";
+
+/**
+ * Sanity access for the drawing generator. Writes go out with
+ * SANITY_API_WRITE_TOKEN when it is set, otherwise with the signed-in admin's
+ * own Studio token (already checked by getAdmin), so no extra secret is
+ * needed to get started.
+ */
+export function writeClient(request: Request): SanityClient | null {
+  const bearer = request.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1];
+  const token = process.env.SANITY_API_WRITE_TOKEN || bearer;
+  if (!token) return null;
+  return createClient({ projectId, dataset, apiVersion, token, useCdn: false, perspective: "raw" });
+}
+
+/* ------------------------------------------------------------------ usage cap */
+
+/** Generations allowed per calendar month, across all admins. 0 = generator switched off. */
+export function monthlyCap() {
+  const n = Number(process.env.DRAWING_MONTHLY_CAP ?? 50);
+  return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 50;
+}
+
+const month = () => new Date().toISOString().slice(0, 7);
+/** Ids with a dot are private in Sanity: never served to the public site. */
+const usageId = (m = month()) => `drawing-usage.${m}`;
+
+export async function usedThisMonth(client: SanityClient) {
+  const doc = await client.getDocument<{ count?: number }>(usageId());
+  return doc?.count ?? 0;
+}
+
+/**
+ * Takes one slot of this month's cap before calling the model (so two admins
+ * clicking at once can't both slip past it). Returns the new count, or null
+ * when the cap is reached.
+ */
+export async function reserveSlot(client: SanityClient) {
+  const id = usageId();
+  const cap = monthlyCap();
+  await client.createIfNotExists({ _id: id, _type: "drawingUsage", month: month(), count: 0 });
+  const doc = await client.patch(id).inc({ count: 1 }).commit<{ count: number }>();
+  if (doc.count > cap) {
+    await client.patch(id).dec({ count: 1 }).commit();
+    return null;
+  }
+  return doc.count;
+}
+
+/** Gives the slot back when the model failed, so errors don't eat the budget. */
+export async function releaseSlot(client: SanityClient) {
+  await client.patch(usageId()).dec({ count: 1 }).commit().catch(() => undefined);
+}
+
+/* ----------------------------------------------------------------- the images */
+
+type AssetInfo = { url?: string; mimeType?: string; width?: number; height?: number };
+const ASSET_FIELDS = `url, mimeType, "width": metadata.dimensions.width, "height": metadata.dimensions.height`;
+
+/**
+ * The photo to draw from: a library image (photoId, its draft wins) or an
+ * image file just uploaded in the tool (assetId). Only Sanity's own CDN is
+ * ever fetched.
+ */
+export async function loadSource(client: SanityClient, input: { photoId?: string; assetId?: string }) {
+  let asset: AssetInfo | null = null;
+  if (input.photoId) {
+    const id = input.photoId.replace(/^drafts\./, "");
+    const docs = await client.fetch<{ _id: string; asset: AssetInfo | null }[]>(
+      `*[_type == "photo" && _id in [$id, "drafts." + $id]]{ _id, "asset": image.asset->{ ${ASSET_FIELDS} } }`,
+      { id },
+    );
+    asset = (docs.find((d) => d._id.startsWith("drafts.")) ?? docs[0])?.asset ?? null;
+  } else if (input.assetId) {
+    asset = await client.fetch<AssetInfo | null>(`*[_type == "sanity.imageAsset" && _id == $id][0]{ ${ASSET_FIELDS} }`, {
+      id: input.assetId,
+    });
+  }
+  if (!asset?.url || !asset.url.startsWith(`https://cdn.sanity.io/images/${projectId}/`)) return null;
+
+  // Models work at ~1–1.5k px; a smaller JPEG keeps the request light.
+  const res = await fetch(`${asset.url}?w=1600&h=1600&fit=max&fm=jpg&q=90`);
+  if (!res.ok) throw new Error(`Could not download the photo (${res.status})`);
+  const scale = asset.width && asset.height ? Math.min(1, 1600 / Math.max(asset.width, asset.height)) : 1;
+  return {
+    bytes: Buffer.from(await res.arrayBuffer()),
+    mimeType: "image/jpeg",
+    width: asset.width && Math.round(asset.width * scale),
+    height: asset.height && Math.round(asset.height * scale),
+  } satisfies SourceImage;
+}
+
+/** Marks generated sketches, so the tool only ever deletes files it made itself. */
+export const DRAWING_SOURCE = "celine-drawing-generator";
+
+/** Stores the drawing as an (unattached) image file; the admin then saves or discards it. */
+export async function uploadDrawing(
+  client: SanityClient,
+  drawing: Drawing,
+  meta: { name: string; provider: string; model: string },
+) {
+  const ext = drawing.mimeType.split("/")[1]?.replace("jpeg", "jpg") || "png";
+  const asset = await client.assets.upload("image", drawing.bytes, {
+    filename: `${meta.name.replace(/[^\w.-]+/g, "-").slice(0, 60) || "photo"}-sketch-${meta.provider}.${ext}`,
+    contentType: drawing.mimeType,
+    source: { name: DRAWING_SOURCE, id: meta.provider },
+    description: `Generated by ${meta.model}`,
+  });
+  return { assetId: asset._id, url: asset.url };
+}
