@@ -51,7 +51,7 @@ export const NAVIGATION: NavGroup[] = [
     title: "Studio",
     items: [
       { title: "Leads", icon: EnvelopeIcon, tool: "leads", description: "Consultation requests from the booking form." },
-      { title: "Analytics", icon: ChartUpwardIcon, description: "Visitors, top pages and where people come from." },
+      { title: "Analytics", icon: ChartUpwardIcon, tool: "analytics", description: "Visitors, top pages and where people come from." },
       { title: "Components", icon: BlockElementIcon, description: "Every section and element the website is built from." },
       { title: "Style guide", icon: ColorWheelIcon, description: "Colours, type and spacing. The brand's source of truth." },
       { title: "Drawing generator", icon: SparklesIcon, description: "Turn a photo into a Celine-style drawing." },
