@@ -7,6 +7,7 @@ import { CommentIcon } from "@sanity/icons/Comment";
 import { DashboardIcon } from "@sanity/icons/Dashboard";
 import { DocumentsIcon } from "@sanity/icons/Documents";
 import { EnvelopeIcon } from "@sanity/icons/Envelope";
+import { EyeOpenIcon } from "@sanity/icons/EyeOpen";
 import { HelpCircleIcon } from "@sanity/icons/HelpCircle";
 import { ImagesIcon } from "@sanity/icons/Images";
 import { RobotIcon } from "@sanity/icons/Robot";
@@ -37,6 +38,7 @@ export const NAVIGATION: NavGroup[] = [
   {
     title: "Content",
     items: [
+      { title: "Live preview", icon: EyeOpenIcon, tool: "preview", description: "Browse the site and click any text or image to edit it." },
       { title: "Pages", icon: DocumentsIcon, tool: "pages", description: "The text of every page, in Romanian and English." },
       { title: "Case studies", icon: CaseIcon, tool: "projects", description: "Residential and HORECA projects." },
       { title: "Testimonials", icon: CommentIcon, tool: "testimonials", description: "Client quotes used across the site." },

@@ -8,10 +8,12 @@
  */
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
+import { presentationTool } from "sanity/presentation";
 import { structureTool } from "sanity/structure";
 import { StudioLogo } from "./src/sanity/components/StudioLogo";
 import { apiVersion, dataset, projectId } from "./src/sanity/env";
 import { schemaTypes, SINGLETON_TYPES } from "./src/sanity/schemaTypes";
+import { resolve } from "./src/sanity/presentation/resolve";
 import { StudioLayout, StudioToolMenu } from "./src/sanity/components/StudioLayout";
 import { pagesStructure, settingsStructure, typeStructure } from "./src/sanity/structure";
 import { dashboardTool } from "./src/sanity/tools/dashboard";
@@ -53,6 +55,13 @@ export default defineConfig({
     structureTool({ name: "team", title: "Team", structure: typeStructure("teamMember", "Team") }),
     structureTool({ name: "images", title: "Images", structure: typeStructure("photo", "Images") }),
     structureTool({ name: "settings", title: "Site settings", structure: settingsStructure }),
+    // Live preview: browse the site and click any text or image to edit it.
+    presentationTool({
+      name: "preview",
+      title: "Live preview",
+      resolve,
+      previewUrl: { initial: "/", previewMode: { enable: "/api/draft-mode/enable", disable: "/api/draft-mode/disable" } },
+    }),
     // GROQ playground: only for developers, hidden in production.
     ...(process.env.NODE_ENV === "development" ? [visionTool({ defaultApiVersion: apiVersion })] : []),
   ],
