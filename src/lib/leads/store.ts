@@ -5,8 +5,9 @@ import type { Lead, ProjectType } from "./lead";
  * from the server only, with the service-role key, through Supabase's REST
  * API (no client library needed for one insert and one update).
  */
-const url = process.env.SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // the secret key (sb_secret_…) or the legacy service_role key
+// Tolerates a pasted REST URL (…/rest/v1/) or a trailing slash
+const url = process.env.SUPABASE_URL?.trim().replace(/\/+$/, "").replace(/\/rest\/v1$/, "");
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(); // the secret key (sb_secret_…) or the legacy service_role key
 
 export const storeConfigured = Boolean(url && key);
 

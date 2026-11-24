@@ -23,6 +23,6 @@ export async function PATCH(request: Request, { params }: RouteContext<"/api/adm
     return lead ? Response.json({ lead }) : Response.json({ error: "No such lead." }, { status: 404 });
   } catch (error) {
     console.error("[admin/leads/:id]", error);
-    return Response.json({ error: "Could not save the change in Supabase." }, { status: 502 });
+    return Response.json({ error: `Could not save the change in Supabase. ${(error as Error).message}` }, { status: 502 });
   }
 }

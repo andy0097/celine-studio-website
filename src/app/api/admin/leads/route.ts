@@ -9,6 +9,7 @@ export async function GET(request: Request) {
     return Response.json({ leads: await listLeads() });
   } catch (error) {
     console.error("[admin/leads]", error);
-    return Response.json({ error: "Could not load the leads from Supabase." }, { status: 502 });
+    // Admins only: show Supabase's own message so a setup problem can be fixed without reading server logs
+    return Response.json({ error: `Could not load the leads from Supabase. ${(error as Error).message}` }, { status: 502 });
   }
 }
