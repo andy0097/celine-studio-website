@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import { draftMode } from "next/headers";
 import { SanityLive } from "@/sanity/lib/live";
 import { PreviewTools } from "@/components/sanity/PreviewTools";
+import { CookieConsent } from "@/components/consent/CookieConsent";
 import "../globals.css";
 
 // Text / UI face. Rizoma (display) is self-hosted via @font-face in globals.css.
@@ -40,7 +41,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   return (
     <html lang={locale} className={`${instrumentSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          {children}
+          {/* GA4 + Clarity load only after the visitor accepts (decision 0.8). */}
+          <CookieConsent />
+        </NextIntlClientProvider>
         {/* Refreshes pages when content is published; in preview, also drafts + click-to-edit. */}
         <Suspense>
           <Live />

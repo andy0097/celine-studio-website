@@ -10,6 +10,8 @@ import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+const ANALYTICS_ENABLED = Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID);
+
 function ArrowUpRight() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden className="shrink-0">
@@ -206,6 +208,14 @@ export default function Footer({ content }: { content: FooterContent }) {
                 )}
               </li>
             ))}
+            {/* Reopens the cookie banner (src/components/consent/CookieConsent.tsx). */}
+            {ANALYTICS_ENABLED && (
+              <li>
+                <button type="button" onClick={() => window.dispatchEvent(new Event("cookie-settings"))} className="uppercase">
+                  {f("cookieSettings")}
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </div>

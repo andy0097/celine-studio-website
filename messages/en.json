@@ -81,10 +81,18 @@
     "subscribe": "Subscribe",
     "copyright": "© {year} Celine Studio Art",
     "tagRes": "RES",
-    "tagHoreca": "HORECA"
+    "tagHoreca": "HORECA",
+    "cookieSettings": "Cookie settings"
   },
   "Privacy": {
     "updated": "Last updated — {date}",
     "contents": "Contents"
+  },
+  "Consent": {
+    "title": "Cookies",
+    "text": "We use Google Analytics and Microsoft Clarity to see how visitors use the site, so we can improve it. They set cookies only if you accept. You can change your mind at any time from the footer.",
+    "privacy": "Privacy policy",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

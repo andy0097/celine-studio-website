@@ -81,10 +81,18 @@
     "subscribe": "Abonează-te",
     "copyright": "© {year} Celine Studio Art",
     "tagRes": "REZ",
-    "tagHoreca": "HORECA"
+    "tagHoreca": "HORECA",
+    "cookieSettings": "Setări cookie-uri"
   },
   "Privacy": {
     "updated": "Ultima actualizare — {date}",
     "contents": "Cuprins"
+  },
+  "Consent": {
+    "title": "Cookie-uri",
+    "text": "Folosim Google Analytics și Microsoft Clarity ca să vedem cum este folosit site-ul și să îl îmbunătățim. Acestea setează cookie-uri doar dacă accepți. Îți poți schimba alegerea oricând din subsolul paginii.",
+    "privacy": "Politica de confidențialitate",
+    "accept": "Accept",
+    "decline": "Refuz"
   }
 }
