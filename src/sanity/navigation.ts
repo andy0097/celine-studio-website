@@ -50,12 +50,12 @@ export const NAVIGATION: NavGroup[] = [
   {
     title: "Studio",
     items: [
-      { title: "Leads", icon: EnvelopeIcon, description: "Consultation requests from the booking form." },
-      { title: "Analytics", icon: ChartUpwardIcon, description: "Visitors, top pages and where people come from." },
-      { title: "Components", icon: BlockElementIcon, description: "Every section and element the website is built from." },
-      { title: "Style guide", icon: ColorWheelIcon, description: "Colours, type and spacing. The brand's source of truth." },
-      { title: "Drawing generator", icon: SparklesIcon, description: "Turn a photo into a Celine-style drawing." },
-      { title: "Agent", icon: RobotIcon, description: "Ask for changes to the website in plain words." },
+      { title: "Leads", icon: EnvelopeIcon, tool: "leads", description: "Consultation requests from the booking form." },
+      { title: "Analytics", icon: ChartUpwardIcon, tool: "analytics", description: "Visitors, top pages and where people come from." },
+      { title: "Components", icon: BlockElementIcon, tool: "components", description: "Every section and element the website is built from." },
+      { title: "Style guide", icon: ColorWheelIcon, tool: "style-guide", description: "Colours, type and spacing. The brand's source of truth." },
+      { title: "Drawing generator", icon: SparklesIcon, tool: "drawing", description: "Turn a photo into a Celine-style drawing." },
+      { title: "Agent", icon: RobotIcon, tool: "agent", description: "Ask for changes to the website in plain words." },
     ],
   },
   {
