@@ -237,7 +237,7 @@ export const SECTION_COMPONENTS: ComponentMeta[] = [
       ro: { title: "Întrebări pe care le auzim des" },
     },
     pages: ["/process", "/on-site-consultancy"],
-    sanity: "settings.faq",
+    sanity: "faq (documents, picked per page)",
   },
   {
     name: "TestimonialSlider",
