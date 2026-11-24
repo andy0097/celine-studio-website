@@ -15,7 +15,10 @@ export type LeadState = { status: "idle" | "sent" | "invalid" | "error" };
  */
 export async function submitLead(_prev: LeadState, form: FormData): Promise<LeadState> {
   // Spam trap: a field people never see, so only bots fill it in. Pretend it worked.
-  if (form.get("company")) return { status: "sent" };
+  if (form.get("hp_leave_empty")) {
+    console.warn("[leads] spam trap filled, enquiry dropped");
+    return { status: "sent" };
+  }
 
   const locale = (await getLocale()) === "en" ? "en" : "ro";
   const lead = parseLead(form, locale);
@@ -25,6 +28,7 @@ export async function submitLead(_prev: LeadState, form: FormData): Promise<Lead
   if (storeConfigured) {
     try {
       id = await saveLead(lead);
+      console.info(`[leads] saved ${id}`);
     } catch (error) {
       console.error("[leads] save failed", error);
     }

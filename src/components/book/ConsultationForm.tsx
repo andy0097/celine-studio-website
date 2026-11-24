@@ -54,10 +54,12 @@ export default function ConsultationForm({ email }: { email: string }) {
   return (
     <form onSubmit={onSubmit} data-stagger className="flex max-w-[524px] flex-col gap-space-xl">
       <input type="hidden" name="sourcePage" value={pathname} />
-      {/* Spam trap: hidden from people, bots fill it in */}
+      {/* Spam trap: hidden from people, bots fill it in. Named so browser
+          autofill never recognises it (a "company" field can be autofilled,
+          which silently dropped real enquiries). */}
       <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
-        <label htmlFor="book-company">Company</label>
-        <input id="book-company" name="company" tabIndex={-1} autoComplete="off" />
+        <label htmlFor="book-hp">Leave this empty</label>
+        <input id="book-hp" name="hp_leave_empty" type="text" tabIndex={-1} autoComplete="new-password" data-1p-ignore data-lpignore="true" />
       </div>
 
       <Field label={t("name")} id="book-name">
