@@ -1,0 +1,15 @@
+{
+  "Nav": {
+    "projects": "Projects",
+    "process": "Process",
+    "studio": "Studio",
+    "contact": "Contact",
+    "home": "Celine Studio, home",
+    "main": "Main"
+  },
+  "Language": {
+    "switchTo": "Română",
+    "switchToShort": "RO",
+    "label": "Change language to Romanian"
+  }
+}

@@ -9,10 +9,13 @@ import { useGSAP } from "@gsap/react";
 import { PROJECTS } from "@/content/projects";
 import ProjectsOverlay from "./ProjectsOverlay";
 import { revealOnTop } from "./stack";
+import { useTranslations } from "next-intl";
+import { NAV as NAV_LINKS, ROUTES } from "@/content/site";
+import { Link } from "@/i18n/navigation";
+import LanguageSwitch from "@/components/layout/LanguageSwitch";
 
 gsap.registerPlugin(ScrambleTextPlugin, ScrollTrigger, useGSAP);
 
-const NAV = ["Projects", "Process", "Studio", "Contact"];
 const WORDMARK = ["Celine", "Studio"];
 /* Scramble only with the wordmark's own letters so it never looks like noise. */
 const SCRAMBLE_CHARS = "CELINSTUDO";
@@ -57,6 +60,7 @@ export default function Hero() {
   const scope = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  const t = useTranslations("Nav");
   const photoZ = useRef(PROJECTS.length);
   const shownActive = useRef(0);
 
@@ -308,7 +312,7 @@ export default function Hero() {
               duration: 0.8,
               ease: "none",
               scrambleText: {
-                text: NAV[i].toUpperCase(),
+                text: (item.getAttribute("aria-label") ?? "").toUpperCase(),
                 chars: "upperCase",
                 speed: 0.6,
               },
@@ -316,6 +320,7 @@ export default function Hero() {
             2.3 + i * 0.08,
           );
         });
+        tl.fromTo(q("[data-lang-switch]"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6 }, 2.7);
 
         // 4. Wordmark travels to its place in the layout
         tl.to(wordmark, { x: 0, y: 0, duration: 1.4 }, 2.4);
@@ -481,10 +486,10 @@ export default function Hero() {
               <br />
               interior design
             </p>
-            <a
+            <Link
               data-intro
               data-side-item
-              href="#contact"
+              href={ROUTES.book}
               className="type-link flex w-max items-center gap-space-sm border-b border-ink pb-space-xs"
             >
               Book a consultation
@@ -502,7 +507,7 @@ export default function Hero() {
                   style={{ strokeWidth: "var(--stroke-icon)" }}
                 />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -527,19 +532,22 @@ export default function Hero() {
           className="pointer-events-auto absolute right-[calc(var(--page-guide)+var(--spacing-space-sm))] top-[calc(var(--section-border-offset)+var(--spacing-space-xs))]"
         >
           <ul className="flex flex-col items-end gap-space-md">
-            {NAV.map((item) => (
-              <li key={item}>
-                <a
-                  href={`#${item.toLowerCase()}`}
-                  aria-label={item}
+            {NAV_LINKS.map(({ key, href }) => (
+              <li key={key}>
+                <Link
+                  href={href}
+                  aria-label={t(key)}
                   data-intro
                   data-nav-item
                   className="type-label block min-h-[1lh]"
                 >
-                  {item}
-                </a>
+                  {t(key)}
+                </Link>
               </li>
             ))}
+            <li className="pt-space-xs">
+              <LanguageSwitch data-intro data-lang-switch />
+            </li>
           </ul>
         </nav>
 

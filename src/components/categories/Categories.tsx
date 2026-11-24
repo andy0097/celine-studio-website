@@ -2,6 +2,7 @@
 
 import { useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -30,7 +31,7 @@ function SketchPlaceholder() {
 
 function ProjectCard({ project }: { project: CategoryProject }) {
   return (
-    <a data-card href={project.href} className="group invisible col-span-12 block sm:col-span-4 lg:col-span-3">
+    <Link data-card href={project.href} className="group invisible col-span-12 block sm:col-span-4 lg:col-span-3">
       <div data-card-media className="relative aspect-[304/210] overflow-clip bg-surface-alt">
         {project.image ? (
           <Image
@@ -60,7 +61,7 @@ function ProjectCard({ project }: { project: CategoryProject }) {
         <span className="type-label-caption">{project.title}</span>
         <Arrow />
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -210,14 +211,14 @@ export default function Categories() {
               <h2 data-cat-title className="type-display-tight">
                 {category.name}
               </h2>
-              <a
+              <Link
                 data-cat-all
                 href={category.allHref}
                 className="type-link flex items-center gap-space-sm border-b border-ink pb-space-xs"
               >
                 See all {category.name} projects
                 <Arrow />
-              </a>
+              </Link>
             </div>
             <span aria-hidden data-cat-line className="guide-h pointer-events-none absolute inset-x-0 bottom-0 origin-left" />
           </div>

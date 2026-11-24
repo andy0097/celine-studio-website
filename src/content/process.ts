@@ -6,7 +6,7 @@ export const PROCESS = {
     "Our approach at Celine Studio is designed to make your journey from concept to completion as smooth and enjoyable as possible.",
     "With our four-stage process, we prioritise clarity, collaboration and your unique vision. At every step, we keep you informed, inspired and involved.",
   ],
-  cta: { label: "Discover our process", href: "#process" },
+  cta: { label: "Discover our process", href: "/process" as const },
   /** Placeholder: the hero sketch, until the process showcase arrives. */
   showcase: {
     src: "/images/hero/living-room_sketch.png",

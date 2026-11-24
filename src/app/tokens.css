@@ -1,0 +1,218 @@
+/*
+ * GENERATED from design-system/tokens.json by scripts/build-tokens.mjs.
+ * Do not edit: change tokens.json and run `npm run tokens`.
+ */
+
+@theme {
+  /* Only Celine colours exist: drop Tailwind's default palette. */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-surface: #f5efe9;
+  --color-surface-alt: #d7d0ca;
+  --color-ink: #191618;
+  --color-ink-muted: #191618b3;
+  --color-ink-subtle: #19161880;
+  --color-on-dark: #d7d0ca;
+  --color-on-dark-muted: #d7d0ca6b;
+  --color-line: #0000007a;
+  --color-line-on-dark: rgba(219, 215, 214, 0.48);
+  --color-line-on-photo: #ffffff;
+  --color-line-on-photo-frame: #ffffffcc;
+
+  --font-display: "Rizoma", var(--font-instrument-sans), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --spacing-space-2xs: 4px;
+  --spacing-space-xs: 8px;
+  --spacing-space-sm: 12px;
+  --spacing-space-md: 16px;
+  --spacing-space-lg: 24px;
+  --spacing-space-xl: 32px;
+  --spacing-space-2xl: 48px;
+  --spacing-space-3xl: 64px;
+  --spacing-space-4xl: 96px;
+  --spacing-space-5xl: 112px;
+
+  --radius-none: 0;
+  --radius-full: 9999px;
+}
+
+:root {
+  --content-max: 1240px;
+  --grid-columns: 12;
+  --grid-gutter: 16px;
+  --page-margin: 44px;
+  --guide-to-content: 24px;
+  --section-border-offset: 16px;
+  --section-gap: 112px;
+  --header-h: 100px;
+  --hero-content-h: 70svh;
+  --stroke-hairline: 1px;
+  --stroke-icon: 1.2px;
+  --line-dash: 4px;
+  --line-gap: 4px;
+  --line-clearance: 12px;
+  --frame-overshoot-top: 56px;
+  --frame-overshoot-bottom: 12px;
+  --frame-overshoot-inner: 56px;
+  --frame-overshoot-outer: 30px;
+  --caption-gap: 10px;
+  --card-caption-gap: 14px;
+  --dimension-line-offset: 28px;
+  --dimension-tick: 10px;
+  --inset-frame-padding: 10px;
+  --overlay-photo: linear-gradient(90deg, #19161862 0%, #1916184d 55%, #19161861 100%);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --grid-gutter: 24px;
+    --page-margin: 100px;
+    --section-gap: 224px;
+  }
+}
+
+/* Footer wordmark only. */
+@utility type-wordmark {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(160px, 34.72vw, 500px);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+}
+
+/* Hero and page titles, big section titles. Uppercase in the hero wordmark, as written elsewhere. */
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(64px, 11.4vw, 164px);
+  line-height: 0.9146;
+  letter-spacing: -0.03em;
+}
+
+/* One-line display headings (home category rows). */
+@utility type-display-tight {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(64px, 11.4vw, 164px);
+  line-height: 0.683;
+  letter-spacing: -0.03em;
+}
+
+/* Section titles on inner pages. */
+@utility type-heading {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(56px, 7.8vw, 112px);
+  line-height: 0.9286;
+  letter-spacing: -0.03em;
+}
+
+/* Two-column section titles and the closing CTA. */
+@utility type-heading-sm {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(48px, 6.1vw, 88px);
+  line-height: 0.9545;
+  letter-spacing: -0.03em;
+}
+
+/* Display testimonials, Next project. */
+@utility type-quote {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(36px, 4.45vw, 64px);
+  line-height: 1.0625;
+  letter-spacing: -0.02em;
+}
+
+/* The wordmark at navbar size: two lines, 30px tall in total. */
+@utility type-nav-logo {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 16.4px;
+  line-height: 0.9146;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+/* Hero taglines, project titles in lists. */
+@utility type-lead {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Paragraphs, testimonial quotes in text, FAQ questions. */
+@utility type-body {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Text links, buttons, names. */
+@utility type-link {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Links and items in lists, short descriptions. */
+@utility type-link-list {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Nav, eyebrows, meta, numbers (01), tags. */
+@utility type-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Multi-line captions. */
+@utility type-label-caption {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* FIG. labels on dimension lines. */
+@utility type-fig {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 18px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Long legal text only (sentence case). */
+@utility type-prose {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  letter-spacing: 0.01em;
+}
