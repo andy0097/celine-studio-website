@@ -15,6 +15,7 @@
     "seed:import": "npm run seed:build && sanity dataset import seed/production.ndjson production --missing"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.13.0",
     "@gsap/react": "^2.1.2",
     "@sanity/icons": "^5.4.0",
     "@sanity/ui": "^4.4.12",
