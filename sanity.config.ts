@@ -2,9 +2,9 @@
 
 /**
  * The backend: Sanity Studio mounted at /admin (src/app/admin/[[...tool]]).
- * It opens on the Dashboard tool; Content (structure), and later Leads,
- * Components, Assets, Style guide, Drawing generator and Agent, sit beside
- * it in the top bar. One login (Sanity), one look (Sanity UI).
+ * It opens on the Dashboard tool. Navigation is a left sidebar
+ * (src/sanity/navigation.ts): Dashboard, the content areas (one tool each),
+ * the planned admin tools, Site settings. One login (Sanity), one look (Sanity UI).
  */
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
@@ -12,7 +12,8 @@ import { structureTool } from "sanity/structure";
 import { StudioLogo } from "./src/sanity/components/StudioLogo";
 import { apiVersion, dataset, projectId } from "./src/sanity/env";
 import { schemaTypes, SINGLETON_TYPES } from "./src/sanity/schemaTypes";
-import { structure } from "./src/sanity/structure";
+import { StudioLayout, StudioToolMenu } from "./src/sanity/components/StudioLayout";
+import { pagesStructure, settingsStructure, typeStructure } from "./src/sanity/structure";
 import { dashboardTool } from "./src/sanity/tools/dashboard";
 
 /** Singletons can be edited and published, never created again, duplicated or deleted. */
@@ -40,11 +41,22 @@ export default defineConfig({
       prev.filter((item) => !SINGLETON_TYPES.includes(item.templateId) && !item.templateId.startsWith("caseStudy-")),
   },
   plugins: [
-    structureTool({ title: "Content", structure }),
+    // One tool per sidebar entry (src/sanity/navigation.ts): each screen is a list and the open document.
+    structureTool({ name: "pages", title: "Pages", structure: pagesStructure }),
+    structureTool({
+      name: "projects",
+      title: "Case studies",
+      structure: typeStructure("caseStudy", "Case studies", ["caseStudy-residential", "caseStudy-horeca"]),
+    }),
+    structureTool({ name: "testimonials", title: "Testimonials", structure: typeStructure("testimonial", "Testimonials") }),
+    structureTool({ name: "faq", title: "FAQ", structure: typeStructure("faq", "FAQ") }),
+    structureTool({ name: "team", title: "Team", structure: typeStructure("teamMember", "Team") }),
+    structureTool({ name: "images", title: "Images", structure: typeStructure("photo", "Images") }),
+    structureTool({ name: "settings", title: "Site settings", structure: settingsStructure }),
     // GROQ playground: only for developers, hidden in production.
     ...(process.env.NODE_ENV === "development" ? [visionTool({ defaultApiVersion: apiVersion })] : []),
   ],
   // Dashboard first, so /admin opens on it.
   tools: (prev) => [dashboardTool(), ...prev],
-  studio: { components: { logo: StudioLogo } },
+  studio: { components: { logo: StudioLogo, layout: StudioLayout, toolMenu: StudioToolMenu } },
 });

@@ -1,40 +1,16 @@
 "use client";
 
-import { BlockElementIcon } from "@sanity/icons/BlockElement";
-import { ChartUpwardIcon } from "@sanity/icons/ChartUpward";
-import { ColorWheelIcon } from "@sanity/icons/ColorWheel";
-import { DocumentsIcon } from "@sanity/icons/Documents";
-import { EnvelopeIcon } from "@sanity/icons/Envelope";
-import { ImagesIcon } from "@sanity/icons/Images";
 import { LaunchIcon } from "@sanity/icons/Launch";
-import { RobotIcon } from "@sanity/icons/Robot";
-import { SparklesIcon } from "@sanity/icons/Sparkles";
 import { Badge, Box, Card, Container, Flex, Grid, Heading, Stack, Text } from "@sanity/ui";
 import type { ComponentType } from "react";
 import { useCurrentUser } from "sanity";
 import { useRouter } from "sanity/router";
+import { NAVIGATION } from "../../navigation";
 
-type Area = {
-  title: string;
-  description: string;
-  icon: ComponentType;
-  /** Studio tool name, once the tool exists. */
-  tool?: string;
-  /** External link (opens a new tab). */
-  href?: string;
-};
+type Area = { title: string; description: string; icon: ComponentType; tool?: string; href?: string };
 
-/** Every area of the backend. Areas without a tool or link show "Coming soon". */
-const AREAS: Area[] = [
-  { title: "Content", description: "Pages, case studies, services and FAQ in Romanian and English.", icon: DocumentsIcon, tool: "structure" },
-  { title: "Leads", description: "Consultation requests from the booking form.", icon: EnvelopeIcon },
-  { title: "Analytics", description: "Visitors, top pages and where people come from.", icon: ChartUpwardIcon },
-  { title: "Components", description: "Every section and element the website is built from.", icon: BlockElementIcon },
-  { title: "Images & assets", description: "All images used on the website, and where.", icon: ImagesIcon },
-  { title: "Style guide", description: "Colours, type and spacing. The brand's source of truth.", icon: ColorWheelIcon },
-  { title: "Drawing generator", description: "Turn a photo into a Celine-style drawing.", icon: SparklesIcon },
-  { title: "Agent", description: "Ask for changes to the website in plain words.", icon: RobotIcon },
-];
+/** Every area of the backend, from the side navigation (minus the Dashboard itself). Areas without a tool show "Coming soon". */
+const AREAS: Area[] = NAVIGATION.flatMap((group) => group.items).filter((item) => item.tool !== "dashboard");
 
 export function DashboardTool() {
   const user = useCurrentUser();
