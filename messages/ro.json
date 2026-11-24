@@ -1,0 +1,15 @@
+{
+  "Nav": {
+    "projects": "Proiecte",
+    "process": "Proces",
+    "studio": "Studio",
+    "contact": "Contact",
+    "home": "Celine Studio, prima pagină",
+    "main": "Principal"
+  },
+  "Language": {
+    "switchTo": "English",
+    "switchToShort": "EN",
+    "label": "Schimbă limba în engleză"
+  }
+}

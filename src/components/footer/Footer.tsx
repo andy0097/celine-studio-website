@@ -5,6 +5,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { CONTACT, EXPLORE_LINKS, FOOTER_PROJECTS, LEGAL_LINKS } from "@/content/footer";
+import { ROUTES } from "@/content/site";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -44,6 +47,7 @@ function Heading({ children, id, htmlFor }: { children: string; id?: string; htm
  */
 export default function Footer() {
   const root = useRef<HTMLElement>(null);
+  const t = useTranslations("Nav");
 
   useGSAP(
     () => {
@@ -90,13 +94,13 @@ export default function Footer() {
               </a>
               <span className="type-link-list font-normal text-ink-muted">{CONTACT.address}</span>
             </address>
-            <a
-              href="#contact"
+            <Link
+              href={ROUTES.book}
               className="type-link flex items-center gap-[14px] bg-ink px-[22px] py-space-md text-surface"
             >
               Book a consultation
               <ArrowUpRight />
-            </a>
+            </Link>
           </div>
 
           {/* Explore */}
@@ -104,10 +108,10 @@ export default function Footer() {
             <Heading id="footer-explore">Explore</Heading>
             <ul className="flex flex-col gap-space-sm">
               {EXPLORE_LINKS.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="type-link-list block">
-                    {link.label}
-                  </a>
+                <li key={link.key}>
+                  <Link href={link.href} className="type-link-list block">
+                    {t(link.key)}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -119,10 +123,10 @@ export default function Footer() {
             <ul className="flex flex-col gap-space-sm">
               {FOOTER_PROJECTS.map((project) => (
                 <li key={project.title}>
-                  <a href={project.href} className="flex items-baseline justify-between gap-space-sm">
+                  <Link href={project.href} className="flex items-baseline justify-between gap-space-sm">
                     <span className="type-link-list">{project.title}</span>
                     <span className="type-label text-ink-muted">{project.tag}</span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -179,9 +183,13 @@ export default function Footer() {
           <ul className="flex gap-space-xl">
             {LEGAL_LINKS.map((link) => (
               <li key={link.label}>
-                <a href={link.href} {...(link.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>
-                  {link.label}
-                </a>
+                {"external" in link ? (
+                  <a href={link.external} target="_blank" rel="noreferrer">
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link href={link.href}>{link.label}</Link>
+                )}
               </li>
             ))}
           </ul>

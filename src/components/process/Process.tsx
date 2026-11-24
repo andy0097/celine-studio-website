@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -119,7 +120,7 @@ export default function Process() {
               </p>
             ))}
           </div>
-          <a
+          <Link
             data-pr-text
             href={PROCESS.cta.href}
             className="type-link mt-[calc(var(--spacing-space-3xl)+var(--spacing-space-xs))] flex w-max items-center gap-space-sm border-b border-ink pb-space-xs"
@@ -128,7 +129,7 @@ export default function Process() {
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden className="shrink-0">
               <path d="M2 12L12 2M5 2h7v7" fill="none" stroke="currentColor" style={{ strokeWidth: "var(--stroke-icon)" }} />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
 

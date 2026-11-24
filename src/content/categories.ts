@@ -8,10 +8,12 @@
  * - Project and "see all" links point at in-page anchors until the project
  *   pages exist.
  */
+import type { AppPathname } from "@/i18n/routing";
+
 export type CategoryProject = {
   slug: string;
   title: string;
-  href: string;
+  href: AppPathname;
   /** Project cover, ~3:2. `position` is the object-position crop. */
   image: { src: string; alt: string; position?: string } | null;
   /** Line drawing shown on hover; null until the sketch is ready. */
@@ -21,7 +23,7 @@ export type CategoryProject = {
 export type Category = {
   slug: string;
   name: string;
-  allHref: string;
+  allHref: AppPathname;
   projects: CategoryProject[];
 };
 
@@ -29,12 +31,12 @@ export const CATEGORIES: Category[] = [
   {
     slug: "residential",
     name: "Residential",
-    allHref: "#residential",
+    allHref: "/residential",
     projects: [
       {
         slug: "home-remodel",
         title: "Home remodel, mid-century modern — Oradea",
-        href: "#home-remodel",
+        href: "/residential",
         image: {
           src: "/images/projects/residential/bathroom.png",
           alt: "Bathroom with a round backlit mirror, marble vanity and walk-in shower",
@@ -44,7 +46,7 @@ export const CATEGORIES: Category[] = [
       {
         slug: "kitchen-remodel",
         title: "Kitchen remodel, mid-century modern — Oradea",
-        href: "#kitchen-remodel",
+        href: "/residential",
         image: {
           src: "/images/projects/kitchen.png",
           alt: "Kitchen with an oak arch, stone splashback and fluted island with bar stools",
@@ -55,7 +57,7 @@ export const CATEGORIES: Category[] = [
       {
         slug: "dining-shelving",
         title: "Dining & shelving, mid-century modern — Oradea",
-        href: "#dining-shelving",
+        href: "/residential",
         image: {
           src: "/images/projects/dining.png",
           alt: "Dining area with arched oak shelving, marble table and patterned bench",
@@ -67,12 +69,12 @@ export const CATEGORIES: Category[] = [
   {
     slug: "horeca",
     name: "HORECA",
-    allHref: "#horeca",
+    allHref: "/horeca",
     projects: [
       {
         slug: "street-coffee",
         title: "Street Coffee, café — placeholder",
-        href: "#street-coffee",
+        href: "/projects/street-coffee",
         image: {
           src: "/images/custom-elements/lighting.png",
           alt: "Oval blackened-steel ceiling light with inset LED strips in the Street Coffee café",
@@ -83,14 +85,14 @@ export const CATEGORIES: Category[] = [
       {
         slug: "horeca-project-2",
         title: "HORECA project — placeholder",
-        href: "#horeca",
+        href: "/horeca",
         image: null,
         sketch: null,
       },
       {
         slug: "horeca-project-3",
         title: "HORECA project — placeholder",
-        href: "#horeca",
+        href: "/horeca",
         image: null,
         sketch: null,
       },

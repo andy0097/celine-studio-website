@@ -1,0 +1,70 @@
+# Handoff to Claude Code — Celine Studio website
+
+Updated 2026-11-24. Read this first, then `Resources/implementation-plan.md`.
+
+## The project
+Website for Celine Studio, an interior design studio in Oradea (residential + HORECA).
+Goal: look more credible, support higher prices, explain what clients get at each step.
+Owner of the build: Andrei (Greenhouse). Tasks live in Notion, project "C Design Studio".
+
+## Stack
+- Next.js 16.4.6 (App Router, Turbopack, `cacheComponents`, `partialPrefetching`). `proxy.ts` replaces middleware. Read `node_modules/next/dist/docs/` before using an API you're unsure of (see AGENTS.md).
+- React 19.3, Tailwind v4 (`@theme`, `@utility`), GSAP + ScrollTrigger/SplitText/ScrambleText via `useGSAP`.
+- next-intl 4.16: Romanian default (no prefix), English under `/en`, translated slugs.
+- Sanity 6 + next-sanity 13, Studio embedded at `/admin`. Project `vbl3xzyn`, dataset `production` (`.env.local`).
+- Hosting planned on Vercel.
+
+## Where things are
+| What | Where |
+|---|---|
+| Pages | `src/app/[locale]/page.tsx` (home), `src/app/[locale]/(site)/…` (residential, horeca, projects/apartment-oradea, projects/street-coffee, process, studio, book-a-consultation, on-site-consultancy, privacy) |
+| Languages & routes | `src/i18n/routing.ts` (pathnames), `navigation.ts`, `request.ts`, `metadata.ts`; `src/proxy.ts`; `messages/ro.json`, `en.json` |
+| Page text (for now) | `src/content/*.ts` (English; moves to Sanity in phase 2) |
+| Components | `src/components/{ui,sections,layout,motion,book,privacy}` |
+| Motion | `src/components/motion/PageMotion.tsx` — animations via `data-*` attributes (data-lines, data-fade, data-wipe, data-parallax, data-tone…). Reuse it; don't write one-off GSAP. |
+| Design tokens (single source) | `design-system/tokens.json` → `npm run tokens` (runs before dev/build) → `src/app/tokens.css` + `src/design-system/token-names.ts`. Never edit the generated files. |
+| Component inventory | `src/design-system/registry.ts` + `*.meta.ts` next to components (37 entries). Add a meta entry for every new component; `checkRegistry()` must return `[]`. See `design-system/README.md`. |
+| Design notes | `Resources/design-system-foundations.md` |
+| Sanity | `sanity.config.ts`, `sanity.cli.ts`, `src/sanity/` (env, lib/client, schemaTypes — empty, components/StudioLogo, tools/dashboard), `src/app/admin/` (own root layout + NextStudio) |
+| Plan | `Resources/implementation-plan.md` (phases 0–7, decisions, progress log) |
+
+## Rules agreed with Andrei
+- Keep the homepage's look and motion on every page. Same nav as the homepage. The CTA section is always the Residential page version (`CtaConversation`).
+- Components in the repo are the source of truth for the design system; tokens.json is the source of truth for brand values. The style guide in the admin is read-only.
+- All page text will live in Sanity (bilingual fields); UI strings (nav, buttons, form labels) stay in next-intl messages.
+- The admin IS Sanity Studio (decision 0.5, "option A"): Dashboard, Leads, Components, Assets, Style guide, Drawing generator and Agent are Studio tools built with `@sanity/ui`, Celine logo in the top bar. Server logic lives in Next.js route handlers that check the Sanity login.
+- Agents: a builder agent makes changes, a separate reviewer agent checks PRs. Owner chats from an Agent tool inside the admin, not Slack.
+- When a task is finished, set its Notion status to Done (In progress while working). Add a line to the plan's progress log.
+
+## Gotchas
+- `@sanity/ui` 4: use `gap` (not `space`) and `gridTemplateColumns` (not `columns`).
+- `@sanity/icons` 5: import each icon from its own path, e.g. `import { DocumentsIcon } from "@sanity/icons/Documents"`.
+- With `cacheComponents` on, don't use route segment config like `export const dynamic`.
+- `.env*` is git-ignored; Vercel needs the three `NEXT_PUBLIC_SANITY_*` vars.
+- The Rizoma trial font has no Romanian diacritics/é (open decision 0.6).
+
+## Status
+Done:
+- All inner pages built (Nov 23).
+- Tokens moved into `design-system/tokens.json` + generator.
+- Component/section inventory.
+- Romanian/English routing, hreflang, sitemap, robots (`/admin` disallowed).
+- Sanity Studio embedded at `/admin` with Dashboard tool (cards say "Coming soon" until each tool exists). Build passes; login not yet tested.
+
+Setup Andrei still needs to do:
+1. `npm install` (if it errors, delete `node_modules` and retry).
+2. sanity.io/manage → API → CORS origins: add `http://localhost:3000` with "Allow credentials".
+3. Commit everything from Nov 23–24 (nothing is committed yet).
+
+Known gaps: Romanian pages still show English body text (until Sanity migration); booking form not connected (`ConsultationForm.tsx` TODO); language switch in the nav is provisional (needs a Paper design); some FAQ answers are drafts.
+
+## Next tasks (plan order)
+1. **create bilingual sanity schemas** — pages, case studies, services, FAQ, site settings; localized fields; shaped by the component registry.
+2. Migrate content + images from `src/content/` into Sanity.
+3. Connect pages to Sanity with cache tags + publish webhook revalidation; move UI strings to next-intl.
+4. Live preview (Presentation tool) and translation drafts.
+5. Case studies dynamic everywhere.
+Then phase 3 Studio tools (assets, style guide, component library, leads, analytics), phase 4 design sync / shadcn registry, phase 5 agents, phase 6 drawing generator, phase 7 launch.
+
+Open decisions: 0.3 who writes the English, 0.6 Rizoma diacritics, 0.7 where leads are stored, 0.8 analytics provider, 0.9 which component properties the owner can edit.
+Blocked on access: Vercel previews + CI (needs GitHub repo + Vercel).

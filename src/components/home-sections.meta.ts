@@ -1,0 +1,113 @@
+import type { ComponentMeta } from "@/design-system/types";
+
+/** Inventory: the homepage sections (each in its own folder under components/). */
+export const HOME_SECTIONS: ComponentMeta[] = [
+  {
+    name: "Hero",
+    kind: "section",
+    group: "Home",
+    summary: "Home hero with the loading intro: CELINE / STUDIO scrambles in, the sketch is drawn and turns into the render; on scroll the image grows full screen and the reference projects appear.",
+    source: { file: "src/components/hero/Hero.tsx" },
+    uses: ["ProjectsOverlay"],
+    props: {
+      tagline: { type: "text", label: "Tagline", localized: true },
+      cta: { type: "text", label: "CTA label", localized: true },
+      image: { type: "image", label: "Hero render", sketch: true },
+    },
+    design: {
+      wordmarkStyle: { type: "typeStyle", label: "Wordmark style", value: "type-display" },
+      taglineStyle: { type: "typeStyle", label: "Tagline style", value: "type-lead" },
+    },
+    samples: {
+      en: { tagline: "Residential & HORECA interior design", cta: "Book a consultation" },
+      ro: { tagline: "Design interior rezidențial și HORECA", cta: "Programează o consultanță" },
+    },
+    pages: ["/"],
+    motion: "Own GSAP timelines (intro + pinned scroll).",
+  },
+  {
+    name: "ProjectsOverlay",
+    kind: "component",
+    group: "Home",
+    summary: "Reference projects over the full-screen hero image: numbered list on the left, drawing panel on the right; hover swaps photo and panel.",
+    source: { file: "src/components/hero/ProjectsOverlay.tsx" },
+    uses: [],
+    props: { projects: { type: "list", label: "Reference projects", of: "caseStudy reference", max: 5 } },
+    design: { rowStyle: { type: "typeStyle", label: "Row style", value: "type-lead" } },
+    samples: {
+      en: { projects: [{ number: "01", title: "Light, open living room", location: "Oradea" }] },
+      ro: { projects: [{ number: "01", title: "Living luminos și deschis", location: "Oradea" }] },
+    },
+    pages: ["/"],
+    sanity: "caseStudy (featured on home)",
+  },
+  {
+    name: "CustomElements",
+    kind: "section",
+    group: "Home",
+    summary: "\"Custom elements that we have designed\": headline, then three framed detail images drawn in one by one while pinned.",
+    source: { file: "src/components/custom-elements/CustomElements.tsx" },
+    uses: [],
+    props: {
+      title: { type: "text", label: "Title", localized: true },
+      items: { type: "list", label: "Elements", of: "{ title (localized), image }", min: 3, max: 3 },
+    },
+    design: { titleStyle: { type: "typeStyle", label: "Title style", value: "type-display" } },
+    samples: {
+      en: { title: "Custom elements that we have designed" },
+      ro: { title: "Elemente unicat proiectate de noi" },
+    },
+    pages: ["/"],
+    motion: "Pinned; crop marks, image wipe, dimension line and caption per image (scrubbed).",
+  },
+  {
+    name: "Categories",
+    kind: "section",
+    group: "Home",
+    summary: "Residential / HORECA rows; hovering a row opens its projects above it, hovering a project wipes it into its sketch.",
+    source: { file: "src/components/categories/Categories.tsx" },
+    uses: [],
+    props: { categories: { type: "list", label: "Categories", of: "{ name (localized), projects: caseStudy[] }", min: 2, max: 2 } },
+    design: { titleStyle: { type: "typeStyle", label: "Category style", value: "type-display-tight" } },
+    samples: {
+      en: { categories: ["Residential", "HORECA"] },
+      ro: { categories: ["Rezidențial", "HORECA"] },
+    },
+    pages: ["/"],
+    sanity: "caseStudy (3 per type)",
+  },
+  {
+    name: "Process",
+    kind: "section",
+    group: "Home",
+    summary: "\"Our process\" intro, then the showcase image opens from a stripe to a band to the full screen.",
+    source: { file: "src/components/process/Process.tsx" },
+    uses: [],
+    props: {
+      paragraphs: { type: "list", label: "Paragraphs", of: "text (localized)", max: 2 },
+      cta: { type: "text", label: "CTA label", localized: true },
+    },
+    design: { titleStyle: { type: "typeStyle", label: "Title style", value: "type-display" } },
+    samples: {
+      en: { cta: "Discover our process" },
+      ro: { cta: "Descoperă procesul nostru" },
+    },
+    pages: ["/"],
+  },
+  {
+    name: "Testimonials",
+    kind: "section",
+    group: "Home",
+    summary: "\"Kind words from our clients\": sticky headline with framed testimonial cards scrolling over it.",
+    source: { file: "src/components/testimonials/Testimonials.tsx" },
+    uses: [],
+    props: { items: { type: "list", label: "Testimonials", of: "testimonial reference", min: 2 } },
+    design: { titleStyle: { type: "typeStyle", label: "Title style", value: "type-display" } },
+    samples: {
+      en: { title: "Kind words from our clients" },
+      ro: { title: "Cuvinte frumoase de la clienții noștri" },
+    },
+    pages: ["/"],
+    sanity: "testimonial",
+  },
+];

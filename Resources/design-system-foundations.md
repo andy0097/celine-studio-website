@@ -6,6 +6,8 @@ This is a working reference for developing the Celine Studio site. The values co
 
 > Rule for everything below: use the token name, never the raw value. If a value is missing, add a token here first.
 
+> **Where the tokens live (Nov 24, 2026):** the values below are kept in `design-system/tokens.json`, the single source. `npm run tokens` (also run before `dev` and `build`) generates `src/app/tokens.css`: the Tailwind theme, the `:root` layout/line/frame values with their desktop overrides, and one `type-*` class per type style. Change a value in tokens.json, never in the CSS. The file uses the Claude Design "Design System" token format, so the same file feeds the style guide and the design-system sync.
+
 ---
 
 ## 1. Tokens
@@ -49,6 +51,20 @@ There are two families:
 Inconsistencies to settle:
 - The hero tagline (24px) has 0 tracking and a 27px line-height, while the project list uses 0.12em / 28px. Pick one `type-lead`.
 - The 164px display size needs a fluid scale for tablet and mobile, for example `clamp(64px, 11.4vw, 164px)`. Define it before building the mobile designs.
+
+### Inner-page tokens (added with the inner pages, Nov 2026)
+
+| Token | Font | Size / line-height (px) | Tracking | Where |
+|---|---|---|---|---|
+| `type-heading` | Rizoma 300 | 112 / 104 (fluid from 56) | -0.03em | Section titles on inner pages |
+| `type-heading-sm` | Rizoma 300 | 88 / 84 (fluid from 48) | -0.03em | Two-column section titles, the closing CTA |
+| `type-quote` | Rizoma 300 | 64 / 68 (fluid from 36) | -0.02em | Display testimonials, "Next project" |
+| `type-prose` | Instrument Sans 400 | 16 / 26 | 0.01em, sentence case | Long legal text only |
+| `type-nav-logo` | Rizoma 300 | 2 lines, 30px total | -0.03em | The wordmark in the navbar |
+
+- `--header-h` (100px): room above the first content of an inner page, for the fixed header.
+- The closing CTA on every inner page is the Residential "perspective room" (`CtaConversation`).
+- Motion on inner pages is declared with data attributes and run by `PageMotion` (see the comment in that file).
 
 ### Spacing and layout
 
