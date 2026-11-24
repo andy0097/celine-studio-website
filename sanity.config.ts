@@ -17,6 +17,7 @@ import { resolve } from "./src/sanity/presentation/resolve";
 import { StudioLayout, StudioToolMenu } from "./src/sanity/components/StudioLayout";
 import { pagesStructure, settingsStructure, typeStructure } from "./src/sanity/structure";
 import { dashboardTool } from "./src/sanity/tools/dashboard";
+import { styleGuideTool } from "./src/sanity/tools/style-guide";
 
 /** Singletons can be edited and published, never created again, duplicated or deleted. */
 const SINGLETON_ACTIONS = new Set(["publish", "discardChanges", "restore"]);
@@ -66,6 +67,6 @@ export default defineConfig({
     ...(process.env.NODE_ENV === "development" ? [visionTool({ defaultApiVersion: apiVersion })] : []),
   ],
   // Dashboard first, so /admin opens on it.
-  tools: (prev) => [dashboardTool(), ...prev],
+  tools: (prev) => [dashboardTool(), ...prev, styleGuideTool()],
   studio: { components: { logo: StudioLogo, layout: StudioLayout, toolMenu: StudioToolMenu } },
 });
