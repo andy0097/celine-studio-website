@@ -44,3 +44,4 @@ next-env.d.ts
 
 # Generated seed import (npm run seed:build)
 /seed/
+!.env.example

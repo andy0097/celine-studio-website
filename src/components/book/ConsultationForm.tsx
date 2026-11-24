@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { startTransition, useActionState, useState, type FormEvent, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowUpRight } from "@/components/ui/icons";
-
-const PROJECT_TYPES = ["residential", "horeca", "onSite"] as const;
-type ProjectType = (typeof PROJECT_TYPES)[number];
+import { PROJECT_TYPES, type ProjectType } from "@/lib/leads/lead";
+import { submitLead, type LeadState } from "@/app/[locale]/(site)/book-a-consultation/actions";
 
 function Field({ label, id, children }: { label: string; id: string; children: ReactNode }) {
   return (
@@ -21,22 +21,28 @@ function Field({ label, id, children }: { label: string; id: string; children: R
 const input =
   "type-link-list w-full bg-transparent font-normal outline-none placeholder:text-ink-subtle";
 
+const INITIAL: LeadState = { status: "idle" };
+
 /**
  * Consultation request (Paper "Book a Consultation — B Split", form half).
- * Underlined fields, project type as single-choice chips.
- * TODO: send to the studio's inbox / CRM; for now it only confirms locally.
+ * Underlined fields, project type as single-choice chips. Sends to the
+ * submitLead server action (saved in Supabase, emailed to the studio).
+ * `email` is the studio's address, offered when sending fails.
  */
-export default function ConsultationForm() {
+export default function ConsultationForm({ email }: { email: string }) {
   const t = useTranslations("Form");
+  const pathname = usePathname();
   const [type, setType] = useState<ProjectType>(PROJECT_TYPES[0]);
-  const [sent, setSent] = useState(false);
+  const [state, action, pending] = useActionState(submitLead, INITIAL);
 
+  // Submitted by hand rather than <form action>, which would clear the fields when sending fails
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    const data = new FormData(e.currentTarget);
+    startTransition(() => action(data));
   };
 
-  if (sent) {
+  if (state.status === "sent") {
     return (
       <div role="status" className="flex max-w-[524px] flex-col gap-space-lg border-t border-dashed border-ink/50 pt-space-xl">
         <p className="type-lead">{t("thanks")}</p>
@@ -47,6 +53,13 @@ export default function ConsultationForm() {
 
   return (
     <form onSubmit={onSubmit} data-stagger className="flex max-w-[524px] flex-col gap-space-xl">
+      <input type="hidden" name="sourcePage" value={pathname} />
+      {/* Spam trap: hidden from people, bots fill it in */}
+      <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label htmlFor="book-company">Company</label>
+        <input id="book-company" name="company" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <Field label={t("name")} id="book-name">
         <input id="book-name" name="name" required autoComplete="name" placeholder={t("namePlaceholder")} className={input} />
       </Field>
@@ -94,11 +107,19 @@ export default function ConsultationForm() {
         />
       </Field>
 
+      {(state.status === "error" || state.status === "invalid") && (
+        <p role="alert" className="type-body text-ink">
+          {t("error", { email })}
+        </p>
+      )}
+
       <button
         type="submit"
-        className="type-link group flex w-full items-center justify-between bg-ink px-[22px] py-space-md text-surface"
+        disabled={pending}
+        aria-busy={pending}
+        className="type-link group flex w-full items-center justify-between bg-ink px-[22px] py-space-md text-surface disabled:opacity-60"
       >
-        {t("submit")}
+        {pending ? t("sending") : t("submit")}
         <span className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
           <ArrowUpRight />
         </span>

@@ -93,7 +93,7 @@ export default async function BookPage({ params }: PageProps<"/[locale]/book-a-c
           <p data-page-intro data-intro-item className="type-body max-w-[420px]">
             {hero?.intro}
           </p>
-          <ConsultationForm />
+          <ConsultationForm email={contact?.email ?? ""} />
         </div>
       </section>
 
