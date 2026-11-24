@@ -6,7 +6,7 @@ import type { Lead } from "./lead";
  * API (no client library needed for one insert and one update).
  */
 const url = process.env.SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // the secret key (sb_secret_…) or the legacy service_role key
 
 export const storeConfigured = Boolean(url && key);
 
@@ -14,7 +14,13 @@ function request(path: string, init: RequestInit) {
   return fetch(`${url}/rest/v1/${path}`, {
     ...init,
     cache: "no-store",
-    headers: { apikey: key!, Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...init.headers },
+    headers: {
+      apikey: key!,
+      // Legacy service_role keys are JWTs and go in Authorization too; new secret keys (sb_secret_…) only in apikey
+      ...(key!.startsWith("eyJ") ? { Authorization: `Bearer ${key}` } : {}),
+      "Content-Type": "application/json",
+      ...init.headers,
+    },
   });
 }
 
