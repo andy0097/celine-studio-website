@@ -17,6 +17,7 @@ import { resolve } from "./src/sanity/presentation/resolve";
 import { StudioLayout, StudioToolMenu } from "./src/sanity/components/StudioLayout";
 import { pagesStructure, settingsStructure, typeStructure } from "./src/sanity/structure";
 import { dashboardTool } from "./src/sanity/tools/dashboard";
+import { leadsTool } from "./src/sanity/tools/leads";
 
 /** Singletons can be edited and published, never created again, duplicated or deleted. */
 const SINGLETON_ACTIONS = new Set(["publish", "discardChanges", "restore"]);
@@ -65,7 +66,9 @@ export default defineConfig({
     // GROQ playground: only for developers, hidden in production.
     ...(process.env.NODE_ENV === "development" ? [visionTool({ defaultApiVersion: apiVersion })] : []),
   ],
-  // Dashboard first, so /admin opens on it.
-  tools: (prev) => [dashboardTool(), ...prev],
+  // Dashboard first, so /admin opens on it. Admin tools call the site's /api/admin routes.
+  tools: (prev) => [dashboardTool(), ...prev, leadsTool()],
+  // Keep the login token in the browser (no third-party cookie), so admin tools can show the site's API who is signed in.
+  auth: { loginMethod: "token" },
   studio: { components: { logo: StudioLogo, layout: StudioLayout, toolMenu: StudioToolMenu } },
 });

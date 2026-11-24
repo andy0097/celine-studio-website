@@ -1,4 +1,4 @@
-import type { Lead } from "./lead";
+import type { Lead, ProjectType } from "./lead";
 
 /**
  * The leads table in Supabase (migration in supabase/migrations). Written
@@ -54,4 +54,47 @@ export async function markEmailed(id: string) {
     body: JSON.stringify({ email_sent: true }),
   });
   if (!res.ok) throw new Error(`Supabase update failed: ${res.status} ${await res.text()}`);
+}
+
+/* ---------- Admin (Leads tool) ---------- */
+
+export const LEAD_STATUSES = ["new", "contacted", "meeting", "proposal", "won", "lost"] as const;
+export type LeadStatus = (typeof LEAD_STATUSES)[number];
+
+/** A row of the leads table, as the admin shows it. */
+export type LeadRow = {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  project_type: ProjectType;
+  city: string | null;
+  about: string | null;
+  locale: "ro" | "en";
+  source_page: string | null;
+  status: LeadStatus;
+  notes: string | null;
+  email_sent: boolean;
+};
+
+/** The latest leads, newest first. */
+export async function listLeads(limit = 500): Promise<LeadRow[]> {
+  if (!storeConfigured) throw new Error("Supabase is not configured");
+  const res = await request(`leads?select=*&order=created_at.desc&limit=${limit}`, { method: "GET" });
+  if (!res.ok) throw new Error(`Supabase select failed: ${res.status} ${await res.text()}`);
+  return (await res.json()) as LeadRow[];
+}
+
+/** Changes a lead's status and/or notes; returns the updated row, or null when there is no such lead. */
+export async function updateLead(id: string, patch: { status?: LeadStatus; notes?: string | null }): Promise<LeadRow | null> {
+  if (!storeConfigured) throw new Error("Supabase is not configured");
+  const res = await request(`leads?id=eq.${encodeURIComponent(id)}&select=*`, {
+    method: "PATCH",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) throw new Error(`Supabase update failed: ${res.status} ${await res.text()}`);
+  const [row] = (await res.json()) as LeadRow[];
+  return row ?? null;
 }
