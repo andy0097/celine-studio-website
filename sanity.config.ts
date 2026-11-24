@@ -20,6 +20,7 @@ import { dashboardTool } from "./src/sanity/tools/dashboard";
 import { leadsTool } from "./src/sanity/tools/leads";
 import { analyticsTool } from "./src/sanity/tools/analytics";
 import { drawingTool } from "./src/sanity/tools/drawing";
+import { agentTool } from "./src/sanity/tools/agent";
 
 /** Singletons can be edited and published, never created again, duplicated or deleted. */
 const SINGLETON_ACTIONS = new Set(["publish", "discardChanges", "restore"]);
@@ -69,7 +70,7 @@ export default defineConfig({
     ...(process.env.NODE_ENV === "development" ? [visionTool({ defaultApiVersion: apiVersion })] : []),
   ],
   // Dashboard first, so /admin opens on it. Admin tools call the site's /api/admin routes.
-  tools: (prev) => [dashboardTool(), ...prev, leadsTool(), analyticsTool(), drawingTool()],
+  tools: (prev) => [dashboardTool(), ...prev, leadsTool(), analyticsTool(), drawingTool(), agentTool()],
   // Keep the login token in the browser (no third-party cookie), so admin tools can show the site's API who is signed in.
   auth: { loginMethod: "token" },
   studio: { components: { logo: StudioLogo, layout: StudioLayout, toolMenu: StudioToolMenu } },

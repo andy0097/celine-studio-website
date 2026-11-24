@@ -56,6 +56,8 @@ export const NAVIGATION: NavGroup[] = [
       { title: "Style guide", icon: ColorWheelIcon, description: "Colours, type and spacing. The brand's source of truth." },
       { title: "Drawing generator", icon: SparklesIcon, tool: "drawing", description: "Turn a photo into a Celine-style drawing." },
       { title: "Agent", icon: RobotIcon, description: "Ask for changes to the website in plain words." },
+      { title: "Drawing generator", icon: SparklesIcon, description: "Turn a photo into a Celine-style drawing." },
+      { title: "Agent", icon: RobotIcon, tool: "agent", description: "Ask for changes to the website in plain words." },
     ],
   },
   {
