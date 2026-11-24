@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight } from "@/components/ui/icons";
 
-const PROJECT_TYPES = ["Residential", "HORECA", "On-site visit"];
+const PROJECT_TYPES = ["residential", "horeca", "onSite"] as const;
+type ProjectType = (typeof PROJECT_TYPES)[number];
 
 function Field({ label, id, children }: { label: string; id: string; children: ReactNode }) {
   return (
@@ -25,7 +27,8 @@ const input =
  * TODO: send to the studio's inbox / CRM; for now it only confirms locally.
  */
 export default function ConsultationForm() {
-  const [type, setType] = useState(PROJECT_TYPES[0]);
+  const t = useTranslations("Form");
+  const [type, setType] = useState<ProjectType>(PROJECT_TYPES[0]);
   const [sent, setSent] = useState(false);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -36,57 +39,57 @@ export default function ConsultationForm() {
   if (sent) {
     return (
       <div role="status" className="flex max-w-[524px] flex-col gap-space-lg border-t border-dashed border-ink/50 pt-space-xl">
-        <p className="type-lead">Thank you.</p>
-        <p className="type-body">We’ll call you within one working day to talk about your {type === "On-site visit" ? "site visit" : "project"}.</p>
+        <p className="type-lead">{t("thanks")}</p>
+        <p className="type-body">{t("thanksText", { kind: type })}</p>
       </div>
     );
   }
 
   return (
     <form onSubmit={onSubmit} data-stagger className="flex max-w-[524px] flex-col gap-space-xl">
-      <Field label="Name" id="book-name">
-        <input id="book-name" name="name" required autoComplete="name" placeholder="Your full name" className={input} />
+      <Field label={t("name")} id="book-name">
+        <input id="book-name" name="name" required autoComplete="name" placeholder={t("namePlaceholder")} className={input} />
       </Field>
 
       <div className="grid grid-cols-1 gap-space-xl sm:grid-cols-2 sm:gap-space-lg">
-        <Field label="Email" id="book-email">
-          <input id="book-email" name="email" type="email" required autoComplete="email" placeholder="name@email.com" className={input} />
+        <Field label={t("email")} id="book-email">
+          <input id="book-email" name="email" type="email" required autoComplete="email" placeholder={t("emailPlaceholder")} className={input} />
         </Field>
-        <Field label="Phone" id="book-phone">
+        <Field label={t("phone")} id="book-phone">
           <input id="book-phone" name="phone" type="tel" autoComplete="tel" placeholder="+40" className={input} />
         </Field>
       </div>
 
       <fieldset className="flex flex-col gap-space-sm">
-        <legend className="type-label pb-space-sm text-ink-muted">Project type</legend>
+        <legend className="type-label pb-space-sm text-ink-muted">{t("projectType")}</legend>
         <div className="flex flex-wrap gap-space-xs">
-          {PROJECT_TYPES.map((t) => {
-            const on = t === type;
+          {PROJECT_TYPES.map((value) => {
+            const on = value === type;
             return (
               <label
-                key={t}
+                key={value}
                 className={`type-label cursor-pointer border border-ink px-space-md py-[10px] transition-colors duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-offset-2 ${
                   on ? "bg-ink text-surface" : "hover:bg-ink/5"
                 }`}
               >
-                <input type="radio" name="type" value={t} checked={on} onChange={() => setType(t)} className="sr-only" />
-                {t}
+                <input type="radio" name="type" value={value} checked={on} onChange={() => setType(value)} className="sr-only" />
+                {t(`types.${value}`)}
               </label>
             );
           })}
         </div>
       </fieldset>
 
-      <Field label="City" id="book-city">
-        <input id="book-city" name="city" autoComplete="address-level2" placeholder="Oradea" className={input} />
+      <Field label={t("city")} id="book-city">
+        <input id="book-city" name="city" autoComplete="address-level2" placeholder={t("cityPlaceholder")} className={input} />
       </Field>
 
-      <Field label="About the project" id="book-about">
+      <Field label={t("about")} id="book-about">
         <textarea
           id="book-about"
           name="about"
           rows={3}
-          placeholder="Size, rooms, timeline, budget range…"
+          placeholder={t("aboutPlaceholder")}
           className={`${input} resize-none`}
         />
       </Field>
@@ -95,7 +98,7 @@ export default function ConsultationForm() {
         type="submit"
         className="type-link group flex w-full items-center justify-between bg-ink px-[22px] py-space-md text-surface"
       >
-        Send request
+        {t("submit")}
         <span className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
           <ArrowUpRight />
         </span>

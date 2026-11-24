@@ -5,7 +5,16 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { TESTIMONIALS } from "@/content/testimonials";
+
+/** A client quote on the home page (homePage.testimonials in Sanity). */
+export type HomeTestimonial = {
+  key: string;
+  /** Who they are and what we did: "Homeowner | Residential — Living room, Oradea". */
+  project: string;
+  quote: string;
+  client: { name: string; initials: string };
+  image: { src: string; alt: string; position?: string } | null;
+};
 import { revealLines } from "@/components/motion/revealLines";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -38,7 +47,7 @@ const HOLD = 25;
  * Under 1024px it is a single column and the headline scrolls normally.
  * With prefers-reduced-motion everything is simply shown.
  */
-export default function Testimonials() {
+export default function Testimonials({ title, items: TESTIMONIALS }: { title: string; items: HomeTestimonial[] }) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -134,7 +143,7 @@ export default function Testimonials() {
             data-t-headline
             className="type-display mx-auto max-w-[1192px] text-center"
           >
-            Kind words from our clients
+            {title}
           </h2>
         </div>
       </div>
@@ -150,7 +159,7 @@ export default function Testimonials() {
           const right = i % 2 === 1;
           return (
             <li
-              key={t.slug}
+              key={t.key}
               className={`col-span-12 w-[min(440px,calc(100%-2*var(--frame-overshoot-outer)))] justify-self-center [--ov-l:var(--frame-overshoot-outer)] [--ov-r:var(--frame-overshoot-outer)] lg:col-span-5 lg:w-[min(440px,calc(100%-var(--frame-overshoot-outer)))] ${
                 right
                   ? "lg:relative lg:top-[var(--t-stagger)] lg:col-start-8 lg:mr-[var(--frame-overshoot-outer)] lg:justify-self-end lg:[--ov-l:var(--frame-overshoot-inner)]"
@@ -160,7 +169,8 @@ export default function Testimonials() {
               <figure data-t-card>
                 <div className="relative aspect-[440/550]">
                   <div data-t-image className="absolute inset-0 overflow-clip">
-                    <div className="absolute inset-0" style={t.image.zoom ? { scale: t.image.zoom } : undefined}>
+                    <div className="absolute inset-0 bg-surface-alt">
+                      {t.image && (
                       <Image
                         src={t.image.src}
                         alt={t.image.alt}
@@ -169,6 +179,7 @@ export default function Testimonials() {
                         className="object-cover"
                         style={{ objectPosition: t.image.position }}
                       />
+                      )}
                     </div>
                   </div>
 

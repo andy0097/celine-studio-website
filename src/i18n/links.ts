@@ -1,9 +1,8 @@
-import type { ComponentProps } from "react";
-import type { Link } from "./navigation";
+import type { getPathname } from "./navigation";
 import type { StaticPathname } from "./routing";
 
-/** Anything the locale-aware Link accepts: a static route or a case study. */
-export type Href = ComponentProps<typeof Link>["href"];
+/** A page, as the locale-aware Link and getPathname take it: a static route or a case study. */
+export type Href = Parameters<typeof getPathname>[0]["href"];
 
 /**
  * Site routes and navigation. Routes are the internal paths (keys of the

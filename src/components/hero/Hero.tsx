@@ -6,11 +6,11 @@ import gsap from "gsap";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { PROJECTS } from "@/content/projects";
 import ProjectsOverlay from "./ProjectsOverlay";
 import { revealOnTop } from "./stack";
 import { useTranslations } from "next-intl";
-import { NAV as NAV_LINKS, ROUTES } from "@/content/site";
+import { NAV as NAV_LINKS, ROUTES, type Href } from "@/i18n/links";
+import type { SketchImageData } from "@/components/ui/SketchImage";
 import { Link } from "@/i18n/navigation";
 import LanguageSwitch from "@/components/layout/LanguageSwitch";
 
@@ -56,7 +56,20 @@ function waitForImage(img: HTMLImageElement | null) {
  * The wordmark and nav live in a fixed header layer outside the pinned
  * section, so they stay on screen for the rest of the page.
  */
-export default function Hero() {
+/** A reference project over the hero image (homePage.hero.slides in Sanity). */
+export type HeroSlide = {
+  key: string;
+  number: string;
+  title: string;
+  location: string;
+  photo: SketchImageData;
+  /** Framed image beside the list: the sketch, or a detail crop. */
+  panel: string | null;
+  href: Href | null;
+};
+
+export default function Hero({ tagline, ctaLabel, slides }: { tagline: string; ctaLabel: string; slides: HeroSlide[] }) {
+  const PROJECTS = slides;
   const scope = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
@@ -434,7 +447,7 @@ export default function Hero() {
           >
             <div data-sketch className="absolute inset-0">
               <Image
-                src="/images/hero/living-room_sketch.png"
+                src={slides[0]?.photo.sketch ?? slides[0]?.photo.src}
                 alt=""
                 fill
                 loading="eager"
@@ -452,7 +465,7 @@ export default function Hero() {
             >
               {PROJECTS.map((project, i) => (
                 <Image
-                  key={project.slug}
+                  key={project.key}
                   data-project-photo={i}
                   src={project.photo.src}
                   alt={i === active ? project.photo.alt : ""}
@@ -482,9 +495,7 @@ export default function Hero() {
           <div className="col-span-12 col-start-1 row-start-1 flex flex-col items-start gap-space-lg self-end text-left lg:col-span-4 lg:col-start-9">
             {/* tracking-normal: at type-lead's 0.12em the tagline runs into the image (Paper hero uses 0). */}
             <p data-intro data-side-item className="type-lead tracking-normal">
-              Residential &amp; HORECA
-              <br />
-              interior design
+              {tagline}
             </p>
             <Link
               data-intro
@@ -492,7 +503,7 @@ export default function Hero() {
               href={ROUTES.book}
               className="type-link flex w-max items-center gap-space-sm border-b border-ink pb-space-xs"
             >
-              Book a consultation
+              {ctaLabel}
               <svg
                 width="14"
                 height="14"
@@ -511,7 +522,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <ProjectsOverlay active={active} onActivate={setActive} />
+        <ProjectsOverlay slides={slides} active={active} onActivate={setActive} />
 
         <noscript>
           <style>{`[data-intro]{visibility:visible!important}`}</style>

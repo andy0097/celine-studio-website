@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import Attribution from "@/components/ui/Attribution";
 
 /** A client quote set large in the display face, centred (HORECA, Street Coffee). */
@@ -17,9 +18,10 @@ export default function QuoteDisplay({
   /** On the stone surface (one band per page at most). */
   stone?: boolean;
 }) {
+  const t = useTranslations("Common");
   return (
     <section
-      aria-label="Client testimonial"
+      aria-label={t("clientTestimonial")}
       className={`relative py-space-5xl lg:py-[128px] ${stone ? "bg-surface-alt" : ""}`}
     >
       <span aria-hidden data-line-x className="guide-h pointer-events-none absolute inset-x-0 top-0 origin-left" />

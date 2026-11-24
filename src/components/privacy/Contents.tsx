@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * Sticky table of contents. The section being read is marked (ink, its
  * divider at 50%); the others stay muted.
  */
-export default function Contents({ items }: { items: { id: string; title: string }[] }) {
+export default function Contents({ items, label }: { items: { id: string; title: string }[]; label: string }) {
   const [active, setActive] = useState(items[0]?.id);
 
   useGSAP(() => {
@@ -28,7 +28,7 @@ export default function Contents({ items }: { items: { id: string; title: string
   }, [items]);
 
   return (
-    <nav aria-label="Contents" className="lg:sticky lg:top-[calc(var(--header-h)+var(--spacing-space-4xl))]">
+    <nav aria-label={label} className="lg:sticky lg:top-[calc(var(--header-h)+var(--spacing-space-4xl))]">
       <ol data-stagger className="flex flex-col border-b border-dashed border-ink/20">
         {items.map((item, i) => {
           const on = item.id === active;

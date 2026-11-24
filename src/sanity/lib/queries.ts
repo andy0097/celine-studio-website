@@ -250,3 +250,9 @@ export const CASE_STUDY_QUERY = `*[_type == "caseStudy" && hasPage != false && c
   "next": next->${CASE_STUDY_CARD},
   ${SEO}
 }`;
+
+/** Both slugs of the case study with this slug in either language (a link in the other language, or redirected by language detection). */
+export const CASE_STUDY_ANY_SLUG_QUERY = `*[_type == "caseStudy" && hasPage != false && $slug in [slug.ro.current, slug.en.current]][0]{
+  "ro": slug.ro.current,
+  "en": coalesce(slug.en.current, slug.ro.current)
+}`;

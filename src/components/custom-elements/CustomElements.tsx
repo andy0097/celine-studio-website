@@ -5,7 +5,9 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { CUSTOM_ELEMENTS } from "@/content/custom-elements";
+
+/** A close-up of a piece the studio designed (homePage.customElements in Sanity). 3:4 detail shots. */
+export type CustomElement = { key: string; number: string; title: string; image: { src: string; alt: string; position?: string } };
 import { revealLines } from "@/components/motion/revealLines";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -34,7 +36,7 @@ const PLACEMENT = [
  *    plays it in reverse.
  * With prefers-reduced-motion everything is simply shown.
  */
-export default function CustomElements() {
+export default function CustomElements({ title, items: CUSTOM_ELEMENTS }: { title: string; items: CustomElement[] }) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -124,7 +126,7 @@ export default function CustomElements() {
         data-ce-headline
         className="type-display absolute top-1/2 left-1/2 w-[min(918px,calc(100%-2*var(--content-inset)))] -translate-x-1/2 -translate-y-1/2 text-center"
       >
-        Custom elements that we have designed
+        {title}
       </h2>
 
       {/* Floating images, one per 4-column third, over the headline */}
@@ -135,7 +137,7 @@ export default function CustomElements() {
           const p = PLACEMENT[i];
           return (
             <figure
-              key={item.slug}
+              key={item.key}
               data-ce-figure
               className={`relative col-span-4 row-start-1 w-[min(calc(100%-var(--frame-overshoot-outer)),320px)] ${p.className}`}
               style={{ marginTop: p.top, "--ov-l": p.ovL, "--ov-r": p.ovR } as CSSProperties}
@@ -148,6 +150,7 @@ export default function CustomElements() {
                     fill
                     sizes="(min-width: 1024px) 320px, 30vw"
                     className="object-cover"
+                    style={{ objectPosition: item.image.position }}
                   />
                 </div>
 

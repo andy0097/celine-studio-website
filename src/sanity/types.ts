@@ -30,6 +30,7 @@ export type PrivacyPage = {
     _type: "privacySection";
     _key: string;
   }>;
+  note?: LocaleText;
   seo?: Seo;
 };
 
@@ -51,6 +52,12 @@ export type Seo = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+};
+
+export type LocaleText = {
+  _type: "localeText";
+  ro?: string;
+  en?: string;
 };
 
 export type LocaleBlocks = {
@@ -126,6 +133,7 @@ export type BookPage = {
   _updatedAt: string;
   _rev: string;
   hero?: {
+    eyebrow?: LocaleString;
     title?: LocaleString;
     intro?: LocaleText;
     image?: Figure;
@@ -137,6 +145,7 @@ export type BookPage = {
   >;
   faq?: {
     eyebrow?: LocaleString;
+    title?: LocaleString;
     items?: Array<
       {
         _key: string;
@@ -157,12 +166,6 @@ export type Figure = {
   _type: "figure";
   photo?: PhotoReference;
   caption?: LocaleString;
-};
-
-export type LocaleText = {
-  _type: "localeText";
-  ro?: string;
-  en?: string;
 };
 
 export type OnSitePage = {
@@ -219,6 +222,7 @@ export type StudioPage = {
   };
   philosophy?: {
     eyebrow?: LocaleString;
+    title?: LocaleString;
     intro?: LocaleText;
     principles?: Array<
       {
@@ -237,6 +241,7 @@ export type StudioPage = {
     ctaLabel?: LocaleString;
   };
   team?: {
+    eyebrow?: LocaleString;
     title?: LocaleString;
     members?: Array<
       {
@@ -305,11 +310,14 @@ export type HorecaPage = {
     eyebrow?: LocaleString;
     title?: LocaleString;
     intro?: LocaleText;
+    text?: LocaleText;
     ctaLabel?: LocaleString;
     image?: Figure;
+    imageNote?: LocaleString;
   };
   venues?: {
     title?: LocaleString;
+    note?: LocaleString;
     items?: Array<{
       title?: LocaleString;
       caseStudy?: CaseStudyReference;
@@ -354,6 +362,7 @@ export type ResidentialPage = {
   };
   onSite?: {
     title?: LocaleString;
+    text?: LocaleText;
     ctaLabel?: LocaleString;
     image?: Figure;
   };
@@ -370,11 +379,15 @@ export type HomePage = {
   hero?: {
     tagline?: LocaleString;
     ctaLabel?: LocaleString;
-    projects?: Array<
-      {
-        _key: string;
-      } & CaseStudyReference
-    >;
+    slides?: Array<{
+      title?: LocaleString;
+      location?: LocaleString;
+      image?: Figure;
+      panel?: Figure;
+      caseStudy?: CaseStudyReference;
+      _type: "heroSlide";
+      _key: string;
+    }>;
   };
   categories?: {
     residential?: Array<
@@ -435,6 +448,10 @@ export type SiteSettings = {
       _key: string;
     } & TitledText
   >;
+  servicesIntro?: {
+    title?: LocaleString;
+    text?: LocaleText;
+  };
   onSite?: {
     duration?: LocaleString;
     fee?: LocaleString;
@@ -450,6 +467,7 @@ export type SiteSettings = {
         _key: string;
       } & CaseStudyReference
     >;
+    tagline?: LocaleString;
     newsletterTitle?: LocaleString;
     newsletterText?: LocaleString;
     legalLinks?: Array<
@@ -613,7 +631,7 @@ export type CaseStudy = {
   year?: number;
   area?: string;
   cover?: Figure;
-  featured?: boolean;
+  hasPage?: boolean;
   lead?: LocaleText;
   hero?: Figure;
   specs?: Array<
@@ -769,6 +787,7 @@ export type AllSanitySchemaTypes =
   | PrivacyPage
   | SanityImageAssetReference
   | Seo
+  | LocaleText
   | LocaleBlocks
   | Slug
   | LocaleString
@@ -777,7 +796,6 @@ export type AllSanitySchemaTypes =
   | BookPage
   | PhotoReference
   | Figure
-  | LocaleText
   | OnSitePage
   | TeamMemberReference
   | StudioPage

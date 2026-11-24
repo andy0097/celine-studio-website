@@ -7,7 +7,7 @@ import LanguageSwitch from "./LanguageSwitch";
 import gsap from "gsap";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { useGSAP } from "@gsap/react";
-import { NAV, ROUTES } from "@/content/site";
+import { NAV, ROUTES } from "@/i18n/links";
 
 gsap.registerPlugin(ScrambleTextPlugin, useGSAP);
 

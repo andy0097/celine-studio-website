@@ -6,7 +6,26 @@ import { Link } from "@/i18n/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { CATEGORIES, type CategoryProject } from "@/content/categories";
+import { useTranslations } from "next-intl";
+import type { Href } from "@/i18n/links";
+
+export type CategoryProject = {
+  key: string;
+  title: string;
+  /** Its case study, or the category page while it has none. */
+  href: Href;
+  /** Project cover, ~3:2. `position` is the object-position crop. */
+  image: { src: string; alt: string; position?: string } | null;
+  /** Line drawing shown on hover; null until the sketch is ready. */
+  sketch: string | null;
+};
+
+export type Category = {
+  slug: string;
+  name: string;
+  allHref: Href;
+  projects: CategoryProject[];
+};
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -20,10 +39,11 @@ function Arrow() {
 
 /** Stand-in until a project's sketch exists. */
 function SketchPlaceholder() {
+  const t = useTranslations("Home");
   return (
     <div className="absolute inset-0 bg-surface-alt p-[var(--inset-frame-padding)]">
       <div className="flex h-full items-center justify-center border border-dashed border-line">
-        <span className="type-fig text-ink-muted">Sketch — coming soon</span>
+        <span className="type-fig text-ink-muted">{t("sketchSoon")}</span>
       </div>
     </div>
   );
@@ -75,7 +95,8 @@ function ProjectCard({ project }: { project: CategoryProject }) {
  * project wipes its photo into its sketch. On touch screens Residential is
  * open from the start.
  */
-export default function Categories() {
+export default function Categories({ categories: CATEGORIES }: { categories: Category[] }) {
+  const t = useTranslations("Home");
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState<number | null>(null);
   const firstRun = useRef(true);
@@ -169,7 +190,7 @@ export default function Categories() {
     <section
       ref={root}
       id="projects"
-      aria-label="Projects by category"
+      aria-label={t("projectsByCategory")}
       onPointerLeave={(e) => {
         if (e.pointerType === "mouse") setActive(null);
       }}
@@ -192,7 +213,7 @@ export default function Categories() {
             String(i),
             <div aria-live="polite" className="grid-12 gap-y-space-xl">
               {category.projects.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
+                <ProjectCard key={project.key} project={project} />
               ))}
             </div>,
           )}
@@ -216,7 +237,7 @@ export default function Categories() {
                 href={category.allHref}
                 className="type-link flex items-center gap-space-sm border-b border-ink pb-space-xs"
               >
-                See all {category.name} projects
+                {t("seeAll", { category: category.name })}
                 <Arrow />
               </Link>
             </div>

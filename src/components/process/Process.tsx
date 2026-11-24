@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { PROCESS } from "@/content/process";
+import type { Href } from "@/i18n/links";
 import { revealLines } from "@/components/motion/revealLines";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -25,7 +25,19 @@ const STRIPE_START = "72%";
  * so pinning it needs no layout changes. With prefers-reduced-motion it just
  * shows the designed band.
  */
-export default function Process() {
+export default function Process({
+  title,
+  paragraphs,
+  cta,
+  image,
+}: {
+  title: string;
+  paragraphs: string[];
+  cta: { label: string; href: Href };
+  /** The single showcase image of the process. */
+  image: { src: string; alt: string; position?: string } | null;
+}) {
+  const PROCESS = { paragraphs, cta };
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -106,7 +118,7 @@ export default function Process() {
 
       <div className="container-page grid-12">
         <h2 id="process-title" data-pr-headline className="type-display col-span-12">
-          Our process
+          {title}
         </h2>
 
         <div
@@ -144,13 +156,9 @@ export default function Process() {
                 "inset(var(--band-inset) calc((1 - var(--appear-x, 1)) * 100%) var(--band-inset) 0)",
             }}
           >
-            <Image
-              src={PROCESS.showcase.src}
-              alt={PROCESS.showcase.alt}
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
+            {image && (
+              <Image src={image.src} alt={image.alt} fill sizes="100vw" className="object-cover" style={{ objectPosition: image.position }} />
+            )}
           </div>
           <span aria-hidden data-pr-band-line className="guide-h absolute inset-x-0 top-[var(--band-inset)] origin-left" />
           <span aria-hidden data-pr-band-line className="guide-h absolute inset-x-0 bottom-[var(--band-inset)] origin-left" />

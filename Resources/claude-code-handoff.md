@@ -17,9 +17,10 @@ Owner of the build: Andrei (Greenhouse). Tasks live in Notion, project "C Design
 ## Where things are
 | What | Where |
 |---|---|
-| Pages | `src/app/[locale]/page.tsx` (home), `src/app/[locale]/(site)/…` (residential, horeca, projects/apartment-oradea, projects/street-coffee, process, studio, book-a-consultation, on-site-consultancy, privacy) |
+| Pages | `src/app/[locale]/page.tsx` (home), `src/app/[locale]/(site)/…` (residential, horeca, projects/[slug] (every case study), process, studio, book-a-consultation, on-site-consultancy, privacy) |
 | Languages & routes | `src/i18n/routing.ts` (pathnames), `navigation.ts`, `request.ts`, `metadata.ts`; `src/proxy.ts`; `messages/ro.json`, `en.json` |
-| Page text (for now) | `src/content/*.ts` (English; moves to Sanity in phase 2) |
+| Page text | Sanity. Queries in `src/sanity/lib/queries.ts` (result types in `content-types.ts`), fetched with `getContent()` from `src/sanity/lib/fetch.ts`; helpers for settings, footer, CTA and SEO in `src/sanity/lib/site.ts`, images in `lib/image.ts`. Links: `src/i18n/links.ts` (ROUTES, NAV, `caseLink`). UI strings in `messages/*.json`. |
+| Seed content | `src/sanity/seed/` (all page text EN + Romanian draft, images from `public/images`). `npm run seed:import` loads it into the dataset (`--missing`: never overwrites). The site also falls back to it when Sanity has no data or can't be reached. |
 | Components | `src/components/{ui,sections,layout,motion,book,privacy}` |
 | Motion | `src/components/motion/PageMotion.tsx` — animations via `data-*` attributes (data-lines, data-fade, data-wipe, data-parallax, data-tone…). Reuse it; don't write one-off GSAP. |
 | Design tokens (single source) | `design-system/tokens.json` → `npm run tokens` (runs before dev/build) → `src/app/tokens.css` + `src/design-system/token-names.ts`. Never edit the generated files. |
@@ -42,7 +43,10 @@ Owner of the build: Andrei (Greenhouse). Tasks live in Notion, project "C Design
 - `@sanity/icons` 5: import each icon from its own path, e.g. `import { DocumentsIcon } from "@sanity/icons/Documents"`.
 - With `cacheComponents` on, don't use route segment config like `export const dynamic`.
 - `.env*` is git-ignored; Vercel needs the three `NEXT_PUBLIC_SANITY_*` vars.
-- The Rizoma trial font has no Romanian diacritics/é (open decision 0.6).
+- The Rizoma trial font has no Romanian diacritics/é (open decision 0.6); Romanian headings fall back to another font until the licensed files are in.
+- GROQ: read a localized field with `coalesce(select($locale == "en" => f.en), f.ro)` (the `t()` helper in queries.ts), not `f[$locale]` (groq-js treats that as a filter).
+- Fetch rule: call `getFetchMode()` (draft mode) in the page, then pass it to `getContent()`; the cached function itself must not read cookies/headers.
+- Case-study links: `caseLink(card)` returns null while a case study has no page (`hasPage` off); cards then link to their category.
 
 ## Status
 Done:
@@ -51,21 +55,24 @@ Done:
 - Component/section inventory.
 - Romanian/English routing, hreflang, sitemap, robots (`/admin` disallowed).
 - Sanity Studio embedded at `/admin` with Dashboard tool (cards say "Coming soon" until each tool exists).
-- Bilingual schemas (Nov 24): see the Content model row above. Schema validates (`sanity schema validate`), build passes. Content not migrated yet, pages still read `src/content/`.
+- Bilingual schemas (Nov 24): see the Content model row above. Schema validates (`sanity schema validate`), build passes.
+- Content migrated (2.3), every page reads Sanity with live updates and a publish webhook (2.4), case studies are one dynamic route used everywhere (2.6). `src/content/` is gone.
+- Live preview (Presentation tool, click-to-edit) — 2.5, translation drafts still to do.
 
 Setup Andrei still needs to do:
 1. `npm install` (if it errors, delete `node_modules` and retry).
 2. sanity.io/manage → project abej04l7 → API → CORS origins: add `http://localhost:3000` with "Allow credentials".
-3. Commit everything from Nov 23–24 (nothing is committed yet).
+3. `npx sanity login`, then `npm run seed:import` (uploads the images and creates every document; safe to re-run).
+4. sanity.io/manage → API → Tokens: a Viewer token → `SANITY_API_READ_TOKEN` in `.env.local` and on Vercel.
+5. Webhook (sanity.io/manage → API → Webhooks): URL `https://<site>/api/revalidate`, trigger on create/update/delete, a secret → `SANITY_REVALIDATE_SECRET`.
 
-Known gaps: Romanian pages still show English body text (until Sanity migration); booking form not connected (`ConsultationForm.tsx` TODO); language switch in the nav is provisional (needs a Paper design); some FAQ answers are drafts.
+Known gaps: Romanian text is an AI draft to review (0.3); booking form not connected (`ConsultationForm.tsx` TODO); language switch in the nav is provisional (needs a Paper design); some FAQ answers are drafts.
 
 ## Next tasks (plan order)
 1. ~~create bilingual sanity schemas~~ (done Nov 24).
-2. Migrate content + images from `src/content/` into Sanity.
-3. Connect pages to Sanity with cache tags + publish webhook revalidation; move UI strings to next-intl.
-4. Live preview (Presentation tool) and translation drafts.
-5. Case studies dynamic everywhere.
+2. ~~Migrate content~~, ~~connect pages~~, ~~case studies dynamic~~ (done Nov 24).
+3. Translation drafts RO → EN in the Studio (rest of 2.5).
+4. 3.5 Leads: booking form saves the lead and emails the studio.
 Then phase 3 Studio tools (assets, style guide, component library, leads, analytics), phase 4 design sync / shadcn registry, phase 5 agents, phase 6 drawing generator, phase 7 launch.
 
 Open decisions: 0.3 who writes the English, 0.6 Rizoma diacritics, 0.7 where leads are stored, 0.8 analytics provider, 0.9 which component properties the owner can edit.

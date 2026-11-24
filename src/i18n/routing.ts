@@ -6,7 +6,7 @@ import { defineRouting } from "next-intl/routing";
  *   English is under /en (celinestudio.ro/en/projects/…).
  * - Every page has a translated slug. The keys below are the internal paths
  *   (the folders under src/app/[locale]); links in code always use these keys
- *   (see ROUTES in content/site.ts), and next-intl writes the right URL.
+ *   (see ROUTES in i18n/links.ts), and next-intl writes the right URL.
  * Adding a page: add its key here with both slugs.
  */
 export const routing = defineRouting({

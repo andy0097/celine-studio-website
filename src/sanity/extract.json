@@ -103,6 +103,14 @@
         },
         "optional": true
       },
+      "note": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "localeText"
+        },
+        "optional": true
+      },
       "seo": {
         "type": "objectAttribute",
         "value": {
@@ -216,6 +224,36 @@
                 }
               }
             }
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "localeText",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "localeText"
+          }
+        },
+        "ro": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "en": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
           },
           "optional": true
         }
@@ -708,6 +746,14 @@
         "value": {
           "type": "object",
           "attributes": {
+            "eyebrow": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
+              },
+              "optional": true
+            },
             "title": {
               "type": "objectAttribute",
               "value": {
@@ -764,6 +810,14 @@
           "type": "object",
           "attributes": {
             "eyebrow": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
+              },
+              "optional": true
+            },
+            "title": {
               "type": "objectAttribute",
               "value": {
                 "type": "inline",
@@ -863,36 +917,6 @@
           "value": {
             "type": "inline",
             "name": "localeString"
-          },
-          "optional": true
-        }
-      }
-    }
-  },
-  {
-    "name": "localeText",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "localeText"
-          }
-        },
-        "ro": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "en": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
           },
           "optional": true
         }
@@ -1198,6 +1222,14 @@
               },
               "optional": true
             },
+            "title": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
+              },
+              "optional": true
+            },
             "intro": {
               "type": "objectAttribute",
               "value": {
@@ -1307,6 +1339,14 @@
         "value": {
           "type": "object",
           "attributes": {
+            "eyebrow": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
+              },
+              "optional": true
+            },
             "title": {
               "type": "objectAttribute",
               "value": {
@@ -1679,6 +1719,14 @@
               },
               "optional": true
             },
+            "text": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeText"
+              },
+              "optional": true
+            },
             "ctaLabel": {
               "type": "objectAttribute",
               "value": {
@@ -1694,6 +1742,14 @@
                 "name": "figure"
               },
               "optional": true
+            },
+            "imageNote": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
+              },
+              "optional": true
             }
           }
         },
@@ -1705,6 +1761,14 @@
           "type": "object",
           "attributes": {
             "title": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
+              },
+              "optional": true
+            },
+            "note": {
               "type": "objectAttribute",
               "value": {
                 "type": "inline",
@@ -1981,6 +2045,14 @@
               },
               "optional": true
             },
+            "text": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeText"
+              },
+              "optional": true
+            },
             "ctaLabel": {
               "type": "objectAttribute",
               "value": {
@@ -2075,23 +2147,71 @@
               },
               "optional": true
             },
-            "projects": {
+            "slides": {
               "type": "objectAttribute",
               "value": {
                 "type": "array",
                 "of": {
                   "type": "object",
                   "attributes": {
-                    "_key": {
+                    "title": {
                       "type": "objectAttribute",
                       "value": {
-                        "type": "string"
+                        "type": "inline",
+                        "name": "localeString"
+                      },
+                      "optional": true
+                    },
+                    "location": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "localeString"
+                      },
+                      "optional": true
+                    },
+                    "image": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "figure"
+                      },
+                      "optional": true
+                    },
+                    "panel": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "figure"
+                      },
+                      "optional": true
+                    },
+                    "caseStudy": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "caseStudy.reference"
+                      },
+                      "optional": true
+                    },
+                    "_type": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string",
+                        "value": "heroSlide"
                       }
                     }
                   },
                   "rest": {
-                    "type": "inline",
-                    "name": "caseStudy.reference"
+                    "type": "object",
+                    "attributes": {
+                      "_key": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
                   }
                 }
               },
@@ -2416,6 +2536,31 @@
         },
         "optional": true
       },
+      "servicesIntro": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "title": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
+              },
+              "optional": true
+            },
+            "text": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeText"
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
       "onSite": {
         "type": "objectAttribute",
         "value": {
@@ -2498,6 +2643,14 @@
                     "name": "caseStudy.reference"
                   }
                 }
+              },
+              "optional": true
+            },
+            "tagline": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "localeString"
               },
               "optional": true
             },
@@ -3434,7 +3587,7 @@
         },
         "optional": true
       },
-      "featured": {
+      "hasPage": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"

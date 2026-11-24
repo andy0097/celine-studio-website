@@ -24,7 +24,8 @@ function withUploads(value: unknown): unknown {
   const obj = value as Record<string, unknown>;
   const asset = obj.asset as { _ref?: string } | undefined;
   if (obj._type === "image" && asset?._ref && files.has(asset._ref)) {
-    const { asset: _drop, ...rest } = obj;
+    const rest = { ...obj };
+    delete rest.asset;
     return { ...rest, _sanityAsset: `image@${pathToFileURL(files.get(asset._ref)!).href}` };
   }
   return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, withUploads(v)]));

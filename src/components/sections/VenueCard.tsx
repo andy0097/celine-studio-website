@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import type { AppPathname } from "@/i18n/routing";
+import type { Href } from "@/i18n/links";
 import SketchImage, { type SketchImageData } from "@/components/ui/SketchImage";
 import { ArrowUpRight } from "@/components/ui/icons";
 
@@ -11,7 +11,7 @@ export default function VenueCard({
   image,
 }: {
   title: string;
-  href: AppPathname | null;
+  href: Href | null;
   ratio: string;
   image: SketchImageData;
 }) {
